@@ -1,0 +1,6 @@
+.infos-wrapper{
+    user-select: none;
+}
+.infos h2 {
+    letter-spacing: 5px;
+}
