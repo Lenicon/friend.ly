@@ -73,12 +73,18 @@
     color: var(--green);
 }
 
-.profile-infos .username {
+.profile-infos .realname {
     font-size: 1.4rem;
     font-weight: bold;
 }
 
 .profile-infos .email {
+    margin-top: -1.1rem !important;
+    color: lightgray;
+    font-size: 1rem;
+}
+
+.profile-infos .username {
     margin-top: -1.1rem !important;
     color: lightgray;
     font-size: 1rem;

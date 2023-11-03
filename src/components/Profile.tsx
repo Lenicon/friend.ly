@@ -6,13 +6,16 @@ import { Context } from '../context/Context';
 export default function Profile({open, setOpen}) {
     const { auth, user, dispatch } = useContext(Context);
     const [onEdit, setOnEdit] = useState(false);
-    const [username, setUsername] = useState("");
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
     const [desc, setDesc] = useState("");
+
     const [profileImage, setProfileImage] = useState(null);
 
     const handleOnEdit = () => {
         if(!user) return;
-        setUsername(user.username);
+        setFname(user.fname);
+        setLname(user.lname);
         setDesc(user.desc);
         setOnEdit(true);
     }
@@ -35,9 +38,9 @@ export default function Profile({open, setOpen}) {
                         <i className="fa-solid fa-camera"></i>
                     </div>
                     <form onSubmit={()=>{}} className="profile-form">
-                        <input type="text" placeholder="First Name"/>
-                        <input type="text" placeholder="Last Name"/>
-                        <textarea typeof="text" placeholder="Write something about you."/>
+                        <input onChange={(e)=>setFname(e.target.value)} type="text" placeholder="First Name"/>
+                        <input onChange={(e)=>setLname(e.target.value)} type="text" placeholder="Last Name"/>
+                        <textarea required onChange={(e)=>setDesc(e.target.value)} typeof="text" placeholder="Write something about you."/>
                         <div className="profile-actions">
                             <button className="cancel-btn" onClick={()=>setOnEdit(false)}>
                                 Cancel
@@ -53,9 +56,9 @@ export default function Profile({open, setOpen}) {
                     <div className='avatar-wrapper'>
                         <Avatar src={user?.profile? user.profile.url : ""} height={150} width={150}/>
                     </div>
-                    <span className='username'>{user?.fname} {user?.lname}</span>
+                    <span className='realname'>{user?.fname} {user?.lname}</span>
                     <span className='email'>{user?.email}</span>
-                    <span className='email'>{user?.username}</span>
+                    <span className='username'>{user?.username}</span>
                     <p className='status'>{user?.desc}</p>
                     <button className='edit-btn' onClick={()=>setOnEdit(true)}>
                         <i className="fa-solid fa-pen-to-square"></i>Profile
