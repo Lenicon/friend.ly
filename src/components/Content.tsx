@@ -1,21 +1,55 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import '../assets/css/content.css';
 import Avatar from './Avatar';
-import ChatItem from './ChatItem';
 import Message from './Message';
-import {SeedMessages} from "../data/Messages";
 import ImageSlider from './ImageSlider';
 import InfoContainer from './InfoContainer';
+import { Context } from '../context/Context';
+import {v4 as getID} from 'uuid';
+import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData } from '../services/chatServices';
+import { onSnapshot } from 'firebase/firestore';
 
-
-export default function Content({chat, setChat}) {
-
+export default function Content() {
+    const {currentChat, auth, dispatch} = useContext(Context)
+    const friend = currentChat?.friend;
+    
     const [onMenu, setOnMenu] = useState(false);
     const [onViewer, setOnViewer] = useState(false);
-    const [messages, setMessages] = useState(SeedMessages || []);
+    const [messages, setMessages] = useState([]);
+    
+    const [images, setImages] = useState([]);
+    const [message, setMessage] = useState("");
     const [msgImages, setMsgImages] = useState([]);
 
-    const openImageViewer = (images:any) => {
+    const [loading, setLoading] = useState(false);
+
+    const scrollRef = useRef(null);
+
+    useEffect(()=>{
+        return scrollRef.current?.scrollIntoView({behavior:"smooth"});
+    }, [messages]);
+
+    useEffect(()=>{
+        const loadMessages = async () => {
+            if (currentChat == null) return;
+            try {
+                const query = getMsgQueryByConversationId(currentChat.id);
+                onSnapshot(query, snapshots=>{
+                    let tmpMessages = [];
+                    snapshots.forEach(snapshot=>{
+                        tmpMessages.push(getSnapshotData(snapshot));
+                    });
+                    setMessages(tmpMessages.sort((a,b)=>a.createdAt - b.createdAt));
+                })
+            } catch (error) {
+                console.log(error)
+            }
+        };
+
+        loadMessages();
+    }, [currentChat]);
+
+    const openImageViewer = (images) => {
         setMsgImages(images);
         setOnViewer(true);
     };
@@ -25,22 +59,84 @@ export default function Content({chat, setChat}) {
         setOnViewer(false);
     };
 
+    const handleImages = (e) => {
+        const files = e.target.files;
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                const id = getID();
+                const img = {
+                    id,
+                    origin: files[i].name,
+                    filename: id+"-"+files[i].name,
+                    file: files[i]
+                };
+                setImages((prev)=>[...prev, img])
+            }
+        }
+    };
+
+    const handleRemoveImage = (id) =>{
+        setImages(
+            (prev)=>prev.filter(
+                (image)=>image.id !== id
+            )
+        );
+    };
+
+    const handleCreateMessage = async() => {
+        if (currentChat == null) return;
+        if (!message && images?.length == 0) return;
+        setLoading(true)
+
+        try {
+            const msg = {
+                conversationId: currentChat.id,
+                sender: auth.id,
+                receiver: currentChat.friend.id,
+                message,
+                images: []
+            };
+
+            const res = await createMessageAsync(msg, images);
+            if(res){
+                // clear inputs if success
+                setMessage("");
+                setImages([]);
+                setLoading(false)
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false)
+        }
+    };
+
+    const handleCloseChat = () => {
+        dispatch({ type: "SET_CURRENT_CHAT", payload: null });
+        localStorage.setItem("convId", null);
+    }
+
     return (
-    <div className={chat? "content active": "content"}>
-        { chat ? (
+    <div className={currentChat? "content active": "content"}>
+        { currentChat ? (
             <div className='wrapper'>
                 <div className='top'>
-                    <Avatar username={"Jomegatron"} id='22800207' height={45} width={45}/>
-                    <div className="app-icon menu-icon"
-                    onClick={() => setOnMenu((prev) => !prev)}
+                    <Avatar
+                        src={friend?.uProfile ? friend.uProfile:""}
+                        username={friend?.username}
+                        height={45}
+                        width={45}
+                    />
+                    <div
+                        className="app-icon menu-icon"
+                        onClick={() => setOnMenu((prev) => !prev)}
                     >
                         
                         <i className='fa-solid fa-ellipsis'></i>
                         {onMenu && (
                             <div className="menu-wrapper">
-                            <span className='menu-item' onClick={()=>setChat(false)}>Close Chat</span>
-                            <span className='menu-item'>Delete Messages</span>
-                            <span className='menu-item'>Delete Chat</span>
+                            {/* <span className='menu-item'>Reveal</span> */}
+                            <span className='menu-item'>Profile</span>
+                            <span className='menu-item' onClick={handleCloseChat}>Close Chat</span>
                         </div>
                         )}
                     </div>
@@ -48,30 +144,63 @@ export default function Content({chat, setChat}) {
                 <div className='center'>
                     { msgImages.length > 0 && onViewer ? (
                         <div className='image-viewer-wrapper'>
-                            <ImageSlider images={msgImages} onClose={closeImageViewer}/>
-                            
+                            <ImageSlider
+                                images={msgImages}
+                                onClose={closeImageViewer}
+                            />
                         </div>
                     ) : (
                         <div className='messages-wrapper'>
-                            {messages.map((msg)=>(
+                            {messages.map((msg, index)=>(
                                 <Message
                                     key={msg?.id}
                                     msg={msg}
-                                    owner={msg?.owner}
+                                    owner={msg?.sender == auth?.id}
                                     openImageViewer={openImageViewer}
+                                    scrollRef={messages.length - 1 == index ? scrollRef : null}
                                 />
-                            ))}
+                            ))
+                            }
                         </div>
                     )}
                 </div>
                 <div className='bottom'>
-                    <div className='app-icon'>
-                        <i className='fa-solid fa-image'></i>
-                    </div>
-                    <textarea placeholder='Write a message' />
-                    <div className='app-icon'>
-                        <i className='fa-solid fa-paper-plane'></i>
-                    </div>
+                    {images.length > 0 && (
+                        <div className="images-preview">
+                            {images.map(image=>(
+                                <div className="image-item" key={image?.id}>
+                                    <img src={URL.createObjectURL(image?.file)} alt=""/>
+                                    <i onClick={()=>handleRemoveImage(image.id)} className='fa-solid fa-rectangle-xmark'></i>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <label htmlFor='upload-images'>
+                        <div className='app-icon'>
+                            <input
+                                type='file'
+                                accept='.jpg,.jpeg,.png,.gif'
+                                id='upload-images'
+                                multiple
+                                style={{display:"none"}}
+                                onChange={handleImages}
+                            />
+                            <i className='fa-solid fa-image'></i>
+                        </div>
+                    </label>
+                        <textarea
+                            maxLength={160}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder='Write a message'
+                        />
+                    <button className='app-icon' disabled={loading} onClick={handleCreateMessage}>
+                        {loading ?
+                            <i className='fa-solid fa-spinner rotate'></i>
+                            :
+                            <i className='fa-solid fa-paper-plane'></i>
+                        }
+                    </button>
                 </div>
             </div>
         ) : (

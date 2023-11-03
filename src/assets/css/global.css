@@ -1,5 +1,6 @@
 :root {
-    --green: #0c5e2b;
+    --green: #066418;
+    --subcolor: #658751;
     --black: #333;
     --white: #fff;
     --bg-dark: rgba(0, 0, 0, 0.2);
@@ -8,6 +9,36 @@
     --border-light: 1px solid rgba(0, 0, 0, 0.2);
     --box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
 }
+
+
+.register, .login {
+    --s: 60px; /* control the size */
+
+    --_c: var(--subcolor) calc(100% - var(--s)/2) 99%,#0000;
+    --_g: var(--s),#0000 calc(99% - var(--s)/2),var(--_c);
+    background:
+        radial-gradient(var(--s) at 100% var(--_g)),
+        radial-gradient(calc(var(--s)/4) at 50% calc(100%/3),var(--_c)) var(--s) 0,
+        radial-gradient(var(--s) at   0% var(--_g)) 0 calc(3*var(--s))
+        var(--green);
+    background-size: 
+        calc(2*var(--s)) calc(9*var(--s)/4),
+        calc(2*var(--s)) calc(3*var(--s)/4);
+}
+
+.rotate {
+    animation: rotation 1s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+  
 
 * {
     margin: 0;
@@ -99,6 +130,10 @@ button:hover {
 }
 
 .app-icon:hover {
+    background-color: var(--bg-dark);
+}
+
+.app-icon:disabled {
     background-color: var(--bg-dark);
 }
 

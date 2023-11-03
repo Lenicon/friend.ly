@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import '../assets/css/register.css'
 import { registerAsync } from '../services/authServices';
-import { randUsername } from '../config/randConfig';
+import { zodiacUsernames, zodiacAvatarURLs } from '../config/randConfig';
 import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
@@ -35,11 +35,13 @@ export default function Register() {
 
     setLoading(true);
 
-    let selectRndUsername = Math.floor(Math.random() * randUsername.length);
+    let selectZodiacUsername = Math.floor(Math.random() * zodiacUsernames.length);
     let selectRndNum = Math.floor(10000 + Math.random() * 90000);
     
+    let selection = [selectZodiacUsername, selectRndNum];
     const creds = {
-      username: `${randUsername[selectRndUsername]}_${selectRndNum}`,
+      username: zodiacUsernames[selection[0]]+"_"+selection[1],
+      uProfile: zodiacAvatarURLs[selection[0]],
       fname: fnameRef.current.value,
       lname: lnameRef.current.value,
       uscID: emailRef.current.value.replace("@usc.edu.ph", ""),

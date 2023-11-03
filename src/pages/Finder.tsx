@@ -1,7 +1,9 @@
-
+import { useState } from 'react';
 
 export default function Finder() {
   return (
-    <div>Selection</div>
+    <div>
+
+    </div>
   )
 }

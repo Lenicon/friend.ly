@@ -16,6 +16,7 @@
   background-color: var(--white);
   color: var(--green);
   border-radius: 0.5rem;
+  box-shadow: 0 0 10px 2px rgba(18, 41, 19, 0.4);
 }
 
 .register .wrapper .heading {
@@ -81,3 +82,4 @@
     width: 90%;
   }
 }
+

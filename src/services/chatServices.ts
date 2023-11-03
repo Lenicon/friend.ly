@@ -9,7 +9,12 @@ import {
     updateDoc, 
     deleteDoc, 
     doc, 
-    setDoc
+    setDoc,
+    query,
+    where,
+    getDocs,
+    orderBy,
+    limit
 } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
@@ -22,8 +27,10 @@ export const createUserAsync = async(creds)=>{
             lname: creds.lname,
             uscID: creds.uscID,
             email: creds.email,
-            desc: "Gay people are cringe.",
+            desc: "Nice to meet you, I hope we can be friends!",
+            uProfile: creds.uProfile,
             profile: "",
+            isAdmin: creds.isAdmin,
             createdAt: serverTimestamp(),
         }
         return await setDoc(doc(db, "users", creds.uid), user);
@@ -62,18 +69,127 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
 // delete user
 
 // get all users
-  
-  // get user
-  export const getUserAsync = async (id) => {
+export const getUsersAsync = async (user) => {
+    if (!user) return;
     try {
-      const userDoc = doc(db, "users", id);
-      const snapshot = await getDoc(userDoc);
-      return getSnapshotData(snapshot);
+        const snapshots = await getDocs(
+            query(collection(db, "users"), where("email","!=", user.email))
+        );
+        const users = snapshots.docs.map((item)=> getSnapshotData(item));
+        return users;
     } catch (error) {
-      console.log(error);
+        console.log(error)
     }
-  };
+}
 
+// get user
+export const getUserAsync = async (id) => {
+    try {
+        const userDoc = doc(db, "users", id);
+        const snapshot = await getDoc(userDoc);
+        return getSnapshotData(snapshot);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// conversations
+export const createConversationAsync = async(userId, friendId)=>{
+    try {
+        
+        const conv = {
+            members: [userId, friendId],
+            last: {message: "", createdAt: null},
+            createdAt: serverTimestamp()
+        };
+
+        const convDoc = await addDoc(collection(db, "conversations"), conv)
+        let result = null;
+        const convId = convDoc.id;
+        if (convId){
+            // get friend infos
+            const userDoc = doc(db, "users", friendId);
+            const user_res = await getDoc(userDoc);
+            const user_data = getSnapshotData(user_res);
+
+            const res_conv = await getDoc(convDoc);
+            if(res_conv){
+                result = {
+                    ...res_conv.data(),
+                    id: convId,
+                    friend: {
+                        id: user_data.id,
+                        username: user_data.username,
+                        fname: user_data.fname,
+                        lname: user_data.lname,
+                        profile: user_data.profile,
+                        uProfile: user_data.uProfile
+                    }
+                }
+            }
+        }
+        
+        // return convo w contact infos
+        return result;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// Messages
+
+export const createMessageAsync = async(message, images)=>{
+    try {
+        if (images.length > 0){
+            // upload images first
+            const location = `/images/messages/${message.conversationId}/`;
+            const urls = await uploadFiles(images, location);
+            if(urls.length > 0){
+                message.images = arrayUnion(...urls);
+            } else {
+                message.images = arrayUnion();
+            }
+        }
+
+        const newMessage = {
+            ...message, createdAt: serverTimestamp()
+        }
+
+        const msgDoc = await addDoc(collection(db, "messages"), newMessage);
+        const messageId = msgDoc.id;
+        if (messageId){
+            const msg_res = await getDoc(msgDoc);
+            const msg = getSnapshotData(msg_res);
+            // update conversation last message
+            const convDoc = doc(db, "conversations", msg.conversationId);
+            await updateDoc(convDoc, {
+                last: {
+                    message: msg.message,
+                    createdAt: msg.createdAt
+                },
+            });
+            return msg;
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getMsgQueryByConversationId = (convId)=>{
+    return query(
+        collection(db, "messages"),
+        where("conversationId", "==", convId),
+        limit(20)
+    );
+}
+
+export const getConversationsQueryByUser = (userId)=>{
+    return query(
+        collection(db, "conversations"),
+        where("members", "array-contains", userId),
+        limit(10)
+    );
+}
 
 // helper functions
 

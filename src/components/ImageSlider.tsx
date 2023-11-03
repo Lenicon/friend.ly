@@ -31,7 +31,7 @@ export default function ImageSlider({images, onClose}) {
                 modules={[Pagination]}
                 loop={true}
                 navigation={false}
-                pagination={{clickable:true}}
+                pagination={true}
                 spaceBetween={0}
                 slidesPerView={1}
             >
@@ -41,7 +41,7 @@ export default function ImageSlider({images, onClose}) {
                 
                 {images.map((image, index)=>(
                     <SwiperSlide key={index}>
-                        <img src={image} alt="" className="images-slider"/>
+                        <img src={image?.url} alt="" className="image-slide"/>
                     </SwiperSlide>
                     )
                 )}
