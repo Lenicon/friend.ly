@@ -11,8 +11,7 @@ import { signOut } from '../context/Actions';
 import {
     createConversationAsync,
     getConversationsQueryByUser,
-    getSnapshotData,
-    getUsersAsync
+    getSnapshotData
 } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 
