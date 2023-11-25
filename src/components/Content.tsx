@@ -8,6 +8,7 @@ import { Context } from '../context/Context';
 import {v4 as getID} from 'uuid';
 import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
+import FriendProfile from './FriendProfile';
 
 export default function Content() {
     const {currentChat, auth, dispatch} = useContext(Context)
@@ -22,6 +23,8 @@ export default function Content() {
     const [msgImages, setMsgImages] = useState([]);
 
     const [loading, setLoading] = useState(false);
+    const [onFriendProfile, setOnFriendProfile] = useState(false);
+
 
     const scrollRef = useRef(null);
 
@@ -63,13 +66,16 @@ export default function Content() {
         const files = e.target.files;
         if (files) {
             for (let i = 0; i < files.length; i++) {
+
                 const id = getID();
                 const img = {
                     id,
                     origin: files[i].name,
                     filename: id+"-"+files[i].name,
-                    file: files[i]
+                    file: files[i],
+                    fileSize: files[i].size
                 };
+
                 setImages((prev)=>[...prev, img])
             }
         }
@@ -86,6 +92,17 @@ export default function Content() {
     const handleCreateMessage = async() => {
         if (currentChat == null) return;
         if (!message && images?.length == 0) return;
+        if (images) {
+            let fs = 0;
+            for (let i = 0; i < images.length; i++) {
+                fs += images[i].fileSize;
+            }
+            if(fs > 2000000) {
+                console.log(fs);
+                return alert("Warning: File Size should not be more than 2MB!");
+            }
+        }
+        
         setLoading(true)
 
         try {
@@ -115,17 +132,25 @@ export default function Content() {
         localStorage.setItem("convId", null);
     }
 
+    const handleFriendProfile = () => {
+        if (onFriendProfile) setOnFriendProfile(false);
+        else setOnFriendProfile(true);
+    }
+
     return (
     <div className={currentChat? "content active": "content"}>
-        { currentChat ? (
+        {  currentChat ? (
             <div className='wrapper'>
+                <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile}/>
                 <div className='top'>
-                    <Avatar
-                        src={friend?.uProfile ? friend.uProfile:""}
-                        username={friend?.username}
-                        height={45}
-                        width={45}
-                    />
+                    <div className='activateFriendProfile' onClick={handleFriendProfile}>
+                        <Avatar
+                            src={friend?.uProfile ? friend.uProfile:""}
+                            username={friend?.username}
+                            height={45}
+                            width={45}
+                        />
+                    </div>
                     <div
                         className="app-icon menu-icon"
                         onClick={() => setOnMenu((prev) => !prev)}
@@ -135,7 +160,7 @@ export default function Content() {
                         {onMenu && (
                             <div className="menu-wrapper">
                             {/* <span className='menu-item'>Reveal</span> */}
-                            <span className='menu-item'>Profile</span>
+                            <span className='menu-item' onClick={handleFriendProfile}>Profile</span>
                             <span className='menu-item' onClick={handleCloseChat}>Close Chat</span>
                         </div>
                         )}
@@ -206,6 +231,8 @@ export default function Content() {
         ) : (
             <InfoContainer />
         )}
+
+        
     </div>
   )
 }

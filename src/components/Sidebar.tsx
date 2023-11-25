@@ -102,6 +102,8 @@ export default function SideBar() {
                   fname: friend.fname,
                   uProfile: friend.uProfile,
                   profile: friend.profile ? friend.profile.url : "",
+                  desc: friend.desc,
+                  tags: friend.tags
                 },
               });
             }
@@ -152,6 +154,7 @@ export default function SideBar() {
     return (
     <div className='sidebar'>
         <Profile open={onProfile} setOpen={setOnProfile} />
+        
         <div className='wrapper'>
             <div className='top'>
                 <div style={{cursor:'pointer'}} onClick={()=>setOnProfile(true)}>

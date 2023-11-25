@@ -1,0 +1,44 @@
+.tags-input-container {
+    padding: 0.8rem 0.8rem;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    border: var(--border);
+    outline: none;
+    color: var(--black);
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5em;
+    scroll-behavior: smooth;
+    overflow-y: scroll !important;
+}
+
+.tag-item { 
+    background-color: var(--green);
+    color: var(--white);
+    display: inline-block;
+    padding: .3em .55em;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.tag-item .close {
+    height: 18px;
+    width: 18px;
+    background-color: var(--white);
+    color: var(--green);
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    margin-left: .5em;
+    font-size: 18px;
+}
+
+.tags-input {
+    margin: 0 !important;
+    flex-grow: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    
+}

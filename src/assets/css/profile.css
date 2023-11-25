@@ -9,6 +9,7 @@
     transform: translateX(-100%);
     opacity: 0;
     z-index: 100;
+    border-right: var(--border);
 }
 
 .profile-infos{
@@ -64,12 +65,15 @@
     padding: 0.3rem;
     font-size: 1.2rem;
     border-radius: 0.5rem 0 0 0;
-    color: var(--black);
     background-color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
 }
 
-.profile-infos .avatar-wrapper i:hover {
+.profile-infos .avatar-wrapper .upload-image {
+    cursor: pointer;
+    color: var(--black);
+}
+
+.profile-infos .avatar-wrapper .upload-image:hover {
     color: var(--green);
 }
 
@@ -97,11 +101,23 @@
     font-size: 1rem;
 }
 
-.profile-infos .status {
-    font-style: italic;
+.profile-infos .description {
+    /* font-style: italic; */
     color: whitesmoke;
     font-size: 1rem;
-    padding-bottom: 0.5rem;
+    /* padding-bottom: 0.5rem; */
+    background-color: var(--bg-light);
+    padding: 1.2em 18%;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.profile-infos .desc-label {
+    margin-bottom: .5rem !important;
+    text-align: center;
+    font-weight: bold;
+    font-style: normal;
+
 }
 
 .profile-infos .edit-btn {
@@ -165,4 +181,16 @@
 .profile-actions .save-btn:hover {
     color: var(--white);
     background-color: rgb(51, 168, 49);
+}
+
+@media (max-width: 820px) {
+    .profile{
+        width: 300px;
+    }
+}
+
+@media (max-width: 580px) {
+    .profile{
+        width: 100%;
+    }
 }

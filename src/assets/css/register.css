@@ -1,10 +1,9 @@
 .register {
   width: 100%;
-  height: 100vh;
+  height:100lvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--green);
   user-select: none;
 }
 
@@ -24,13 +23,21 @@
   text-align: center;
 }
 
+.register .wrapper .form {
+  display: flex;
+  flex-direction: column;
+  margin-top: .7rem;
+}
+
 .register .wrapper .form .error-msg {
-  color: orangered;
+  color: #C14B2B;
+  background-color: #FEE5DF;
+  border-radius: 5px;
   text-align: center;
   padding: 0.5rem 0;
 }
 
-.register .wrapper .form input {
+.register .wrapper .form input, .register .wrapper .form textarea {
   padding: 0.8rem 0.8rem;
   border-radius: 0.3rem;
   font-size: 1rem;
@@ -38,15 +45,12 @@
   outline: none;
   color: var(--black);
   margin-bottom: 1rem;
+  resize: none;
+  scroll-behavior: smooth;
+  overflow-y: auto;
 }
 
-.register .wrapper .form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1rem;
-}
-
-.register .wrapper .form input::placeholder {
+.register .wrapper .form input::placeholder, .register .wrapper .form textarea::placeholder {
   color: gray;
 }
 
@@ -60,14 +64,67 @@
   align-items: center;
   justify-content: center;
   opacity: 0.8;
+  margin-bottom: .5em;
+  z-index: 100;
 }
 
-.register .wrapper .form button:hover {
+.register .wrapper .form .avatar-wrapper {
+  height: 200px;
+  width: 200px;
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  align-self: center;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--bg-light);
+  
+}
+
+.register .wrapper .form .avatar-wrapper i {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 0.3rem;
+  font-size: 1.2rem;
+  border-radius: 0.5rem 0 0 0;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.register .wrapper .form .avatar-wrapper .upload-image {
+  color: var(--black);
+  cursor: pointer;
+}
+
+.register .wrapper .form .avatar-wrapper .upload-image:hover {
+  color: var(--green);
+}
+
+.register .wrapper .form .note {
+  font-style: italic;
+  color: gray;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  align-self: center;
+}
+
+.register .wrapper .form .btnProceed:hover {
   opacity: 1;
 }
 
+.register .wrapper .form .btnBack {
+  color: black !important;
+  background-color: var(--bg-light) !important;
+}
+
+.register .wrapper .form .btnBack:hover {
+  color: var(--green) !important;
+  opacity: 5 !important;
+}
+
+
 .register .wrapper .form .link {
-  margin-top: 1rem;
+  margin-top: .5rem;
   text-align: right;
   font-size: 14px;
 }
@@ -75,6 +132,24 @@
 .register .wrapper .form .link:hover a {
   text-decoration: underline;
   transition: text-decoration 0.1s ease-in-out;
+}
+
+.register .wrapper .form .input-label {
+  color: var(--black);
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+
+hr {
+  border-radius: 5px;
+  border-color: var(--bg-dark);
+  border-width: 3px;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  margin-bottom: 1rem;
+  
 }
 
 @media (max-width: 580px) {

@@ -1,6 +1,12 @@
 .infos-wrapper{
     user-select: none;
 }
-.infos h2 {
+.infos {
+    display: inline-flex;
+}
+.infos .text {
     letter-spacing: 5px;
+}
+.infos .image {
+    font-size: 80px;
 }

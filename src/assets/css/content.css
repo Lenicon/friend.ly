@@ -17,6 +17,12 @@
     justify-content: space-between;
     border-bottom: var(--border);
     padding: 0 1rem;
+    /* user-select: none; */
+    /* cursor: pointer; */
+}
+
+.content .wrapper .top .activateFriendProfile {
+    cursor: pointer !important;
 }
 
 .menu-icon{

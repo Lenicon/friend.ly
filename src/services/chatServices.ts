@@ -25,12 +25,14 @@ export const createUserAsync = async(creds)=>{
             username: creds.username,
             fname: creds.fname,
             lname: creds.lname,
+            block: creds.block,
             uscID: creds.uscID,
             email: creds.email,
-            desc: "Nice to meet you, I hope we can be friends!",
+            desc: creds.desc,
+            tags: creds.tags,
             uProfile: creds.uProfile,
-            profile: "",
-            isAdmin: creds.isAdmin,
+            profile: creds.profileImage,
+            isAdmin: false,
             createdAt: serverTimestamp(),
         }
         return await setDoc(doc(db, "users", creds.uid), user);
@@ -111,6 +113,7 @@ export const createConversationAsync = async(userId, friendId)=>{
             const userDoc = doc(db, "users", friendId);
             const user_res = await getDoc(userDoc);
             const user_data = getSnapshotData(user_res);
+            console.log("bruh",user_data);
 
             const res_conv = await getDoc(convDoc);
             if(res_conv){
@@ -123,7 +126,9 @@ export const createConversationAsync = async(userId, friendId)=>{
                         fname: user_data.fname,
                         lname: user_data.lname,
                         profile: user_data.profile,
-                        uProfile: user_data.uProfile
+                        uProfile: user_data.uProfile,
+                        desc: user_data.desc,
+                        tags: user_data.tags,
                     }
                 }
             }

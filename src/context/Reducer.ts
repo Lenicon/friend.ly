@@ -14,6 +14,7 @@ export const Reducer = (state, action) => {
                     uscID: action.payload.auth.uscID,
                     admin: action.payload.auth.admin,
                     uProfile: action.payload.auth.uProfile,
+                    desc: action.payload.auth.desc
                 },
                 user: action.payload.user
             };
@@ -28,7 +29,7 @@ export const Reducer = (state, action) => {
                 user: {
                     profile: action.payload.profile,
                     fname: action.payload.fname,
-                    lname: action.payload.lname,
+                    lname: action.payload.lname
                 },
             };
         case "LOAD_USERS":

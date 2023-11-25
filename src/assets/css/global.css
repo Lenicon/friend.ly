@@ -11,8 +11,8 @@
 }
 
 
-.register, .login {
-    --s: 60px; /* control the size */
+.register, .login, body {
+    --s: 80px; /* control the size */
 
     --_c: var(--subcolor) calc(100% - var(--s)/2) 99%,#0000;
     --_g: var(--s),#0000 calc(99% - var(--s)/2),var(--_c);
@@ -23,7 +23,7 @@
         var(--green);
     background-size: 
         calc(2*var(--s)) calc(9*var(--s)/4),
-        calc(2*var(--s)) calc(3*var(--s)/4);
+        calc(2*var(--s)) calc(3*var(--s)/4) !important;
 }
 
 .rotate {
@@ -31,20 +31,16 @@
 }
 
 @keyframes rotation {
-    from {
-        transform: rotate(0deg);
-    }
-    to{
-        transform: rotate(360deg);
-    }
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
 }
-  
+
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -62,13 +58,16 @@
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: transparent;
+    background-color: gray;
 }
 
 
 html {
     overflow-x: hidden;
-    scroll-behavior: smooth;
+    height: auto !important;
+    overflow: -moz-scrollbars-vertical !important;
+    overflow-y: scroll !important;
+    scroll-behavior: smooth !important;
 }
 
 body {
