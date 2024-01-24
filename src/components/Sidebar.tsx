@@ -14,6 +14,11 @@ import {
     getSnapshotData
 } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
+import Friendr from "../components/Friendr";
+
+// type Props = {
+//     setChat: (chat: boolean) => void,
+// }
 
 export default function SideBar() {
     const { auth, users, dispatch, chats, currentChat } = useContext(Context);
@@ -149,6 +154,10 @@ export default function SideBar() {
         dispatch(signOut());
     };
 
+    const handleCloseChat = () => {
+        dispatch({ type: "SET_CURRENT_CHAT", payload: null });
+        localStorage.setItem("convId", null);
+    }
     
 
     return (
@@ -160,15 +169,19 @@ export default function SideBar() {
                 <div style={{cursor:'pointer'}} onClick={()=>setOnProfile(true)}>
                     <Avatar
                         src={auth?.profile? auth.profile : ""}
-                        height={45} width={45}
+                        height={50} width={50}
                     />
                 </div>
-                {!newChat && <span className='logo'><b>YOU: {auth?.username}</b></span>}
-                {newChat && <span className='heading'>Add Conversation</span>}
+                <span className='logo'><b>YOU: {auth?.username}</b></span>
+                {newChat && <Friendr/>}
+                {/* {!newChat && <span className='logo'><b>YOU: {auth?.username}</b></span>} */}
+                {/* {newChat && <span className='heading'>Add Conversation</span>} */}
                 <div
-                    className={newChat? "app-icon active": "app-icon"}
-                    onClick={()=>setNewChat((prev)=>!prev)}
-                >
+                    className={"app-icon"}
+                    onClick={()=>{
+                        setNewChat((prev)=>!prev);
+                        handleCloseChat();
+                    }}>
                     <i className='fa-solid fa-plus'></i>
                 </div>
             </div>
@@ -179,11 +192,11 @@ export default function SideBar() {
                         <input
                             onChange={handleSearch}
                             type='text'
-                            placeholder={newChat? "Search a contact" : 'Search a conversation'}/>
+                            placeholder={"Search a contact"}/>
                     </div>
                 </div>
                 <div className="center-wrapper">
-                    {newChat ? (
+                    {/* {newChat ? (
                         <div className="items-wrapper">
                             {contacts.map((contact)=>(
                                 <ContactItem
@@ -203,12 +216,27 @@ export default function SideBar() {
                                 />
                             ))}
                         </div>
-                    )}
+                    )} */}
+                    <div className="items-wrapper">
+                            {conversations.map((chat)=>(
+                                <ChatItem
+                                    chat={chat}
+                                    active={chat?.id == currentChat?.id}
+                                    selectConversation={handleSelectConversation}
+                                    key={chat?.id}
+                                />
+                            ))}
+                        </div>
                 </div>
             </div>
             <div className='bottom'>
                 <button className="logout-btn" onClick={handleLogout}>
                     <i className='fa-solid fa-power-off'></i>Logout
+                </button>
+                <button className='info-btn' onClick={()=>{
+                    window.open("https://lenicon.gitbook.io/friend.ly/")
+                }}>
+                    <i className='fa-solid fa-info-circle'/>
                 </button>
             </div>
         </div>

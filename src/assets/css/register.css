@@ -32,8 +32,10 @@
 .register .wrapper .form .error-msg {
   color: #C14B2B;
   background-color: #FEE5DF;
+  width: 100% !important;
   border-radius: 5px;
   text-align: center;
+  display: block;
   padding: 0.5rem 0;
 }
 
@@ -48,6 +50,8 @@
   resize: none;
   scroll-behavior: smooth;
   overflow-y: auto;
+  display: block;
+  width: 100%;
 }
 
 .register .wrapper .form input::placeholder, .register .wrapper .form textarea::placeholder {
@@ -74,11 +78,18 @@
   position: relative;
   border-radius: 0.5rem;
   overflow: hidden;
-  display: flex;
+  display: flex !important;
   align-self: center;
   margin-bottom: 0.5rem;
   border: 1px solid var(--bg-light);
-  
+  width: 55%;
+  height: 55%;
+  justify-content: center;
+  /* margin: auto; */
+  clear: both;
+  /* top: 50%; */
+  left: 22.5%;
+  align-items: center;
 }
 
 .register .wrapper .form .avatar-wrapper i {
@@ -89,11 +100,27 @@
   font-size: 1.2rem;
   border-radius: 0.5rem 0 0 0;
   background-color: rgba(255, 255, 255, 0.7);
+  /* display: block; */
+  /* width: 100%; */
 }
 
 .register .wrapper .form .avatar-wrapper .upload-image {
   color: var(--black);
   cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+  /* justify-content: space-around; */
+  padding-top: 0.2em;
+  display: flex;
+}
+
+.register #upload-image {
+  display: none !important;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
 }
 
 .register .wrapper .form .avatar-wrapper .upload-image:hover {
@@ -106,6 +133,13 @@
   font-size: 1rem;
   margin-bottom: 1.2rem;
   align-self: center;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+.register .btnProceed{
+  width: 100%;
 }
 
 .register .wrapper .form .btnProceed:hover {
@@ -115,6 +149,7 @@
 .register .wrapper .form .btnBack {
   color: black !important;
   background-color: var(--bg-light) !important;
+  width: 100%;
 }
 
 .register .wrapper .form .btnBack:hover {
@@ -125,8 +160,10 @@
 
 .register .wrapper .form .link {
   margin-top: .5rem;
-  text-align: right;
+  text-align: right !important;
+  float: right;
   font-size: 14px;
+  width: 100% !important;
 }
 
 .register .wrapper .form .link:hover a {
@@ -140,6 +177,33 @@
   font-size: 1.2rem;
   margin-bottom: .5rem;
 }
+
+.register .wrapper .form #fname {
+  display: block !important;
+  /* justify-content: space-between !important; */
+  width: 48.5%;
+  float: left !important;
+}
+.register .wrapper .form #lname {
+  display: block !important;
+  /* justify-content: space-between !important; */
+  width: 48.5%;
+  float: right !important;
+}
+
+.register .wrapper .form input {
+  display: block !important;
+  width: 100%;
+}
+
+.register .wrapper .form {
+  display: table;
+  width: 100%;
+}
+
+/* .register .wrapper .form {
+  clear: both;
+} */
 
 hr {
   border-radius: 5px;

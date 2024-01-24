@@ -29,9 +29,20 @@ export default function FriendProfile({ open, setOpen }) {
                     <div className='description'>
                         {/* <div className='desc-label'>About:</div>
                         <div>{friend?.desc}asdasdasdsadasdasdasdsdsasdasdadadasdasdasdasdasdd</div> */}
-                        {friend?.desc}
+                        <div className='user-desc'>
+                            {friend?.desc}
+                        </div>
+                        
+                        <div className='tags-wrapper'>
+                            {friend?.tags.map((tag, index) => (
+                                <div className='tag-item' key={index}>
+                                    <span className='text'>#{tag}{index+1==friend.tags.length ? "":","}</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                     {/* {friend.revealed ?"" : <p className='revealed'>Furthur Information Unrevealed Yet</p>} */}
+                    
                 </div>
             </div>
         </div>

@@ -9,6 +9,12 @@ import {v4 as getID} from 'uuid';
 import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
+import Compressor from 'compressorjs';
+
+// type Props={
+//     chat: boolean,
+//     setChat: (chat: boolean)=>void
+// }
 
 export default function Content() {
     const {currentChat, auth, dispatch} = useContext(Context)
@@ -62,21 +68,42 @@ export default function Content() {
         setOnViewer(false);
     };
 
-    const handleImages = (e) => {
-        const files = e.target.files;
+    const handleImages = async (e) => {
+        const files = [...e.target.files];
         if (files) {
             for (let i = 0; i < files.length; i++) {
+                new Compressor(files[i], {
+                    quality: 0.2,
+                    success(res){
+                        files[i] = res;
+                        const id = getID();
+                        const img = {
+                            id,
+                            origin: files[i].name,
+                            filename: id+"-"+files[i].name,
+                            file: files[i],
+                            fileSize: files[i].size
+                        };
 
-                const id = getID();
-                const img = {
-                    id,
-                    origin: files[i].name,
-                    filename: id+"-"+files[i].name,
-                    file: files[i],
-                    fileSize: files[i].size
-                };
+                        setImages((prev)=>[...prev, img])
 
-                setImages((prev)=>[...prev, img])
+                        console.log(files[i].size)
+                    },
+                    error(err){
+                        console.error(err);
+                    }
+                });
+
+                // const id = getID();
+                // const img = {
+                //     id,
+                //     origin: files[i].name,
+                //     filename: id+"-"+files[i].name,
+                //     file: files[i],
+                //     fileSize: files[i].size
+                // };
+
+                // setImages((prev)=>[...prev, img])
             }
         }
     };
@@ -107,14 +134,13 @@ export default function Content() {
 
         try {
             const msg = {
-                conversationId: currentChat.id,
                 sender: auth.id,
                 receiver: currentChat.friend.id,
                 message,
                 images: []
             };
 
-            const res = await createMessageAsync(msg, images);
+            const res = await createMessageAsync(msg, images, currentChat.id);
             if(res){
                 // clear inputs if success
                 setMessage("");
@@ -147,8 +173,8 @@ export default function Content() {
                         <Avatar
                             src={friend?.uProfile ? friend.uProfile:""}
                             username={friend?.username}
-                            height={45}
-                            width={45}
+                            height={50}
+                            width={50}
                         />
                     </div>
                     <div
@@ -217,6 +243,12 @@ export default function Content() {
                             maxLength={160}
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
+                            disabled={loading}
+                            onKeyDown={(e)=>{
+                                if (e.key == 'Enter'){
+                                    handleCreateMessage();
+                                }
+                            }}
                             placeholder='Write a message'
                         />
                     <button className='app-icon' disabled={loading} onClick={handleCreateMessage}>

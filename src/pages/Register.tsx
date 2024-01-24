@@ -16,11 +16,13 @@ export default function Register() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmPassword] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [block, setBlock] = useState("");
   const [desc, setDesc] = useState("I hope we can be friends!");
   const [profileImage, setProfileImage] = useState(null);
+  const [profileImage2, setProfileImage2] = useState(null);
   const [tags, setTags] = useState([]);
 
   const [error, setError] = useState("");
@@ -33,6 +35,7 @@ export default function Register() {
   const clearInputs = () => {
     if (email) setEmail("");
     if (password) setPassword("");
+    if (confirmpassword) setConfirmPassword("");
     if (fname) setEmail("");
     if (lname) setPassword("");
     if (block) setEmail("");
@@ -47,17 +50,24 @@ export default function Register() {
       filename: getID() + "-" + file.name,
       file
     };
+    const Image2 = {
+      origin: file.name,
+      filename: getID() + "-" + file.name,
+      url: URL.createObjectURL(file)
+    };
     setProfileImage(Image);
+    setProfileImage2(Image2);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (profileImage == null)
-      return setError("Please upload an image of your face.");
-    else setError("");
+    // if (profileImage == null)
+    //   return setError("Please upload an image of your face.");
+    // else setError("");
 
     setLoading(true);
+
 
     let selectZodiacUsername = Math.floor(Math.random() * zodiacUsernames.length);
     let selectRndNum = Math.floor(10000 + Math.random() * 90000);
@@ -66,7 +76,7 @@ export default function Register() {
     const creds = {
       username: zodiacUsernames[selection[0]] + "_" + selection[1],
       uProfile: zodiacAvatarURLs[selection[0]],
-      profileImage: profileImage,
+      profile: profileImage,
       fname: fname,
       lname: lname,
       block: block,
@@ -79,6 +89,7 @@ export default function Register() {
 
     try {
       await registerAsync(creds);
+      
       clearInputs();
       setLoading(false);
       navigate("/login");
@@ -95,14 +106,20 @@ export default function Register() {
 
     switch (page) {
       case (1):
-        // if (email == "" || password == "" || lname == "" || fname == "" || block == "")
-        //   return setError("Please completely fill up the form.");
+        if (email == "" || password == "" || lname == "" || fname == "" || block == "")
+          return setError("Please completely fill up the form.");
 
-        // if (!block.match("^[STEM][1-9][0-9]*"))
-        //   return setError("Please input block properly. (T2, S10, E7...)");
+        if (!block.match("^[STEM][1-9][0-9]*"))
+          return setError("Please input Class Block properly. (T2, S10, E7...)");
 
-        // if (!email.match("^[0-9]+@usc\.edu\.ph"))
-        //   return setError("Please use a USC email.");
+        if (!email.match("^[0-9]+@usc\.edu\.ph"))
+          return setError("Please use a USC email.");
+
+        if (password != confirmpassword)
+          return setError("Confirmation Password does not match.");
+
+        if (password.length < 8)
+          return setError("Password length is less than 8.");
 
         if (error != "") setError("");
         setPage(gotoPage);
@@ -111,19 +128,20 @@ export default function Register() {
         break;
 
       case (2):
-        // if ((desc == "" || tags.length == 0) && gotoPage == 3)
-        //   return setError("Please completely fill up the form.");
-
-        if (error != "") setError("");
         if (gotoPage == 2) setPage(gotoPage);
-        else setPage(gotoPage);
+        else {
+          if ((desc == "" || tags.length == 0) && gotoPage == 3)
+          return setError("Please completely fill up the form.");
+
+          if (error != "") setError("");
+          setPage(gotoPage);
+        }
         break;
 
       case (3):
-
         if (error != "") setError("");
         setPage(gotoPage);
-        break
+        break;
 
       default:
         break;
@@ -160,9 +178,10 @@ export default function Register() {
         tags: tags,
       };
 
-
+      await registerAsync(creds);
       console.log(creds)
       setLoading(false);
+      navigate("/login")
     } catch (error) {
       const message = error.code;
       setError(message);
@@ -186,8 +205,8 @@ export default function Register() {
               <input required value={lname} onChange={(p) => setLname(p.target.value)} id='lname' type='text' placeholder='Last Name' />
               <input required value={block} maxLength={3} pattern='^[STEM][0-9][0-9]' onChange={(p) => {p.target.value.toUpperCase(); setBlock(p.target.value);}} id='block' type='text' placeholder='Block' />
               <input required value={email} onChange={(p) => setEmail(p.target.value)} pattern='^[0-9]+@usc\.edu\.ph' id="email" type='email' placeholder='USC Email' />
-              <input required value={password} onChange={(p) => setPassword(p.target.value)} id="password" type='password' placeholder='Password' />
-
+              <input required value={password} onChange={(p) => setPassword(p.target.value)} id="password" type='password' placeholder='Password' minLength={8} />
+              <input required value={confirmpassword} onChange={(p) => setConfirmPassword(p.target.value)} id="confirmpassword" type='password' placeholder='Confirm Password' minLength={8} />
               <hr/>
 
               <button className='btnProceed' onClick={(e) => handlePage(2, e)}>
@@ -206,7 +225,7 @@ export default function Register() {
               <label className='input-label'>
                 Interests 
                 <span style={{ color: 'gray', fontWeight: 'normal', fontSize: '15px', marginLeft: '5px' }}>
-                  {`(tags left: ${10 - tags.length}; enter to add)`}
+                  {`(tags left: ${10 - tags.length}; enter to add; backspace to remove)`}
                 </span>
               </label>
               <TagsInput tags={tags} setTags={setTags} />
@@ -260,7 +279,7 @@ export default function Register() {
               <button className='btnBack' onClick={(e) => handlePage(2, e)}>
                 <i id='arrow-left' className="fa-solid fa-arrow-left point-left"></i>{' Back'}
               </button>
-              <button className='btnProceed' disabled={loading} onClick={handleSubmitTest}>
+              <button className='btnProceed' disabled={loading} onClick={handleSubmit}>
                 {loading ? 'Loading...' : 'Register'}
               </button>
             </div>

@@ -31,10 +31,25 @@
 .sidebar .wrapper .bottom {
     height: 70px;
     display: flex;
+    justify-content: space-between;
+    overflow: auto;
     align-items: center;
     border-top: var(--border);
     padding: 0 1rem;
 }
+
+.bottom .logout-btn {
+    height: 45px;
+}
+
+.bottom .info-btn {
+    height: 45px;
+    padding-left: 12px;
+    padding-right: 12px;
+    align-items: center;
+    font-size: 22px;
+}
+
 
 .sidebar .wrapper .center {
     height: calc(100vh - 140px);

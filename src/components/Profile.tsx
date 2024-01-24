@@ -5,6 +5,7 @@ import { Context } from '../context/Context';
 import { v4 as getID } from "uuid";
 import { updateUserAsync } from '../services/chatServices';
 import { updateProfile } from '../context/Actions';
+import TagsInput from './TagsInput';
 
 export default function Profile({ open, setOpen }) {
     const { user, dispatch } = useContext(Context);
@@ -46,7 +47,8 @@ export default function Profile({ open, setOpen }) {
             const tempUser = {
                 fname,
                 lname,
-                desc: desc ? desc : "Nice to meet you, I hope we can be friends!"
+                desc: desc ? desc : "Nice to meet you, I hope we can be friends!",
+                tags
             }
 
             const res = await updateUserAsync(tempUser, profileImage);
@@ -104,6 +106,8 @@ export default function Profile({ open, setOpen }) {
                             <input required value={fname} onChange={(e) => setFname(e.target.value)} type="text" placeholder="First Name" />
                             <input required value={lname} onChange={(e) => setLname(e.target.value)} type="text" placeholder="Last Name" />
                             <textarea value={desc} required onChange={(e) => setDesc(e.target.value)} typeof="text" placeholder="Write something about you." />
+                            <TagsInput tags={tags} setTags={setTags} />
+
                             <div className="profile-actions">
                                 <button className="cancel-btn" onClick={handleCancel}>
                                     Cancel
@@ -123,13 +127,19 @@ export default function Profile({ open, setOpen }) {
                         <span className='email'>{user?.email}</span>
                         <span className='username'>{user?.username}</span>
                         <div className='description'>
-                            {/* <div className='desc-label'>About:</div>
-                            <div>{user?.desc}asdasdasdsadasdasdasdsdsasdasdadadasdasdasdasdasdd</div> */}
-                            {user?.desc}
+                            {/* <div className='desc-label'>About:</div> */}
+                            <div className='user-desc'>{user?.desc}</div>
+                            {/* {user?.desc} */}
+                            
+                            <div className='tags-wrapper'>
+                            {user?.tags?.map((tag, index) => (
+                                <div className='tag-item' key={index}>
+                                    <span className='text'>#{tag}{index+1==tags.length ? "":","}</span>
+                                </div>
+                            ))}
+                            </div>
                         </div>
-                        <div className='tags'>
-                            {user?.tags}
-                        </div>
+                        
                         <button className='edit-btn' onClick={handleOnEdit}>
                             <i className="fa-solid fa-pen-to-square"></i>Profile
                         </button>

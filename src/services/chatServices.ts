@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, deleteObject, listAll } from "firebase/storage";
 import {auth, firestore as db, storage } from "../config/firebase";
 import {
     serverTimestamp,
@@ -22,22 +22,28 @@ import { updateProfile } from "firebase/auth";
 export const createUserAsync = async(creds)=>{
     try {
         const user = {
-            username: creds.username,
-            fname: creds.fname,
-            lname: creds.lname,
-            block: creds.block,
-            uscID: creds.uscID,
-            email: creds.email,
-            desc: creds.desc,
-            tags: creds.tags,
-            uProfile: creds.uProfile,
-            profile: creds.profileImage,
+            username: creds.username||null,
+            fname: creds.fname||null,
+            lname: creds.lname||null,
+            block: creds.block||null,
+            uscID: creds.uscID||null,
+            email: creds.email||null,
+            desc: creds.desc||null,
+            tags: creds.tags||null,
+            uProfile: creds.uProfile||null,
+            profile: creds.profile||null,
+            matches: creds.matches,
             isAdmin: false,
-            createdAt: serverTimestamp(),
+            createdAt: serverTimestamp()||null,
         }
-        return await setDoc(doc(db, "users", creds.uid), user);
+        return await setDoc(doc(db, "users", creds.uid), user).then((res)=>{
+            console.log("response: ", res);
+        })
+        .catch((err)=>{
+            console.log("Error: ", err);
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -49,6 +55,7 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
         // update the profile image if not null
         if (profileImage) {
             const location = `/images/users/${creds.uid}/profile/`;
+            await deleteAllFiles(location);
             const urls = await uploadFiles([profileImage], location);
             if (urls.length > 0){
                 updatedUser.profile = urls[0];
@@ -114,7 +121,7 @@ export const createConversationAsync = async(userId, friendId)=>{
             const user_res = await getDoc(userDoc);
             const user_data = getSnapshotData(user_res);
             console.log("bruh",user_data);
-
+            
             const res_conv = await getDoc(convDoc);
             if(res_conv){
                 result = {
@@ -143,11 +150,11 @@ export const createConversationAsync = async(userId, friendId)=>{
 
 // Messages
 
-export const createMessageAsync = async(message, images)=>{
+export const createMessageAsync = async(message, images, convoId)=>{
     try {
         if (images.length > 0){
             // upload images first
-            const location = `/images/messages/${message.conversationId}/`;
+            const location = `/images/messages/${convoId}/`;
             const urls = await uploadFiles(images, location);
             if(urls.length > 0){
                 message.images = arrayUnion(...urls);
@@ -160,13 +167,13 @@ export const createMessageAsync = async(message, images)=>{
             ...message, createdAt: serverTimestamp()
         }
 
-        const msgDoc = await addDoc(collection(db, "messages"), newMessage);
+        const msgDoc = await addDoc(collection(db, `conversations/${convoId}/messages`), newMessage);
         const messageId = msgDoc.id;
         if (messageId){
             const msg_res = await getDoc(msgDoc);
             const msg = getSnapshotData(msg_res);
             // update conversation last message
-            const convDoc = doc(db, "conversations", msg.conversationId);
+            const convDoc = doc(db, "conversations", convoId);
             await updateDoc(convDoc, {
                 last: {
                     message: msg.message,
@@ -182,8 +189,8 @@ export const createMessageAsync = async(message, images)=>{
 
 export const getMsgQueryByConversationId = (convId)=>{
     return query(
-        collection(db, "messages"),
-        where("conversationId", "==", convId),
+        collection(db, `conversations/${convId}/messages`),
+        // where("conversationId", "==", convId),
         limit(20)
     );
 }
@@ -212,6 +219,16 @@ const uploadFiles = async(files, location)=>{
         });
     }
     return filesUrls;
+}
+
+const deleteAllFiles = async(location) => {
+    const storageRef = ref(storage, location);
+    listAll(storageRef).then((res)=>{
+        const promises = res.items.map((item) => {
+            return deleteObject(item);
+        });
+        Promise.all(promises);
+    })
 }
 
 export const getSnapshotData = (snapshot) => {

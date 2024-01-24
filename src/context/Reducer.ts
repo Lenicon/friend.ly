@@ -14,7 +14,8 @@ export const Reducer = (state, action) => {
                     uscID: action.payload.auth.uscID,
                     admin: action.payload.auth.admin,
                     uProfile: action.payload.auth.uProfile,
-                    desc: action.payload.auth.desc
+                    desc: action.payload.auth.desc,
+                    tags: action.payload.auth.tags
                 },
                 user: action.payload.user
             };

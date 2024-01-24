@@ -10,10 +10,16 @@ export default function TagsInput({ tags, setTags }) {
             if (tags.length == 10) return;
             const value = e.target.value;
             if (!value.trim()) return;
-            if (tags.includes(value)) return;
 
-            setTags([...tags, value.toLowerCase().trim().replace(/_/g, ' ').replace(/\s{2,}/g, '_').replace(/ /g, '_').replace(/,/g, '')]);
+            let newvalue = value.toLowerCase().trim().replace(/_/g, '').replace(/\s{2,}/g, '_').replace(/ /g, '').replace(/,/g, '');
+            if (tags.includes(newvalue)) return;
+
+            setTags([...tags, newvalue]);
             e.target.value='';
+        }
+
+        if (!e.target.value.trim() && e.code == "Backspace"){
+            removeTag(tags.length-1);
         }
     }
 
@@ -23,12 +29,12 @@ export default function TagsInput({ tags, setTags }) {
 
     return (
         <div className='tags-input-container'>
-            {tags.map((tag, index) => (
+            {tags?.map((tag, index) => (
                 <div className='tag-item' key={index} onClick={() => removeTag(index)}>
-                    <span className='text'>{tag}</span>
-                    <span className='close'>
+                    <span className='text'>#{tag}</span>
+                    {/* <span className='close'>
                         &times;
-                    </span>
+                    </span> */}
                 </div>
             ))}
             {

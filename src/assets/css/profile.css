@@ -107,17 +107,42 @@
     font-size: 1rem;
     /* padding-bottom: 0.5rem; */
     background-color: var(--bg-light);
-    padding: 1.2em 18%;
-    border-radius: 10px;
+    width: 90%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     text-align: center;
 }
 
+.user-desc {
+    margin-bottom: 1.5em;
+}
+
 .profile-infos .desc-label {
-    margin-bottom: .5rem !important;
+    margin-bottom: .3rem !important;
     text-align: center;
     font-weight: bold;
     font-style: normal;
 
+}
+
+
+/*.tags-wrapper {
+    background-color: var(--bg-light);
+    padding: 1.2em 18%;
+    border-radius: 10px;
+    align-items: center;
+}*/
+
+.tags-wrapper {
+    margin-top: -1em;
+}
+.tags-wrapper .tag-item {
+    background-color: rgba(0,0,0,0);
+    /* align-items: center; */
+    margin-left: -.5em;
+}
+.profile-infos .tags-wrapper .tag-item {
+    color: greenyellow;
 }
 
 .profile-infos .edit-btn {
@@ -150,6 +175,23 @@
 .profile-infos .profile-form textarea {
     resize: none;
     height: 80px;
+}
+
+.profile-form .tags-input-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+}
+.profile-form .tags-input-container .tag-item{
+    background-color: white;
+    color: var(--green);
+}
+.profile-form .tags-input-container .tag-item .close{
+    background-color: var(--green);
+    color: white;
+}
+.profile-form .tags-input-container input{
+    background-color: rgba(0, 0, 0, 0);
+    color: white
 }
 
 .profile-actions {
