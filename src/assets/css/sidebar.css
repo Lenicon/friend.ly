@@ -43,11 +43,20 @@
 }
 
 .bottom .info-btn {
-    height: 45px;
+    height: 100%;
+    /* padding-left: 12px;
+    padding-right: 12px; */
+    align-items: center;
+    display: flex !important;
+}
+
+.bottom .info-btn .btn {
     padding-left: 12px;
     padding-right: 12px;
-    align-items: center;
+    height: 45px;
     font-size: 22px;
+    align-items: center;
+    margin-left: 10px;
 }
 
 

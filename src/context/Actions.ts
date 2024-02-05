@@ -15,6 +15,10 @@ export const updateProfile = (user) => {
     return {type: "UPDATE_USER", payload: user};
 }
 
+export const updateMatches = (user) => {
+    return {type: "UPDATE_MATCHES", payload: user};
+}
+
 export const loadUsers = (users)=>{
     return {type: "LOAD_USERS", payload: users}
 }

@@ -7,8 +7,6 @@ export default function FriendProfile({ open, setOpen }) {
     const { currentChat } = useContext(Context);
     const friend = currentChat.friend;
 
-    console.log(friend);
-
     return (
         <div className={open ? "friendProfile active" : "friendProfile"}>
             <div className='friendProfile-wrapper'>

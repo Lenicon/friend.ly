@@ -14,6 +14,8 @@ export default function Register() {
   // const fnameRef = useRef(null);
   // const lnameRef = useRef(null);
 
+  const infolink = "https://lenicon.gitbook.io/friend.ly/"
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
@@ -22,8 +24,10 @@ export default function Register() {
   const [block, setBlock] = useState("");
   const [desc, setDesc] = useState("I hope we can be friends!");
   const [profileImage, setProfileImage] = useState(null);
-  const [profileImage2, setProfileImage2] = useState(null);
+  // const [profileImage2, setProfileImage2] = useState(null);
   const [tags, setTags] = useState([]);
+  const [tconfirm, setTconfirm] = useState(false);
+  const [pconfirm, setPconfirm] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,21 +54,23 @@ export default function Register() {
       filename: getID() + "-" + file.name,
       file
     };
-    const Image2 = {
-      origin: file.name,
-      filename: getID() + "-" + file.name,
-      url: URL.createObjectURL(file)
-    };
+    // const Image2 = {
+    //   origin: file.name,
+    //   filename: getID() + "-" + file.name,
+    //   url: URL.createObjectURL(file)
+    // };
     setProfileImage(Image);
-    setProfileImage2(Image2);
+    // setProfileImage2(Image2);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (profileImage == null)
-    //   return setError("Please upload an image of your face.");
-    // else setError("");
+    if (tconfirm == false) return setError("Please read and accept our Terms & Conditions.");
+    else setError("");
+    
+    if (pconfirm == false) return setError("Please read and accept our Privacy Policy.")
+    else setError("");
 
     setLoading(true);
 
@@ -85,6 +91,7 @@ export default function Register() {
       password: password,
       desc: desc,
       tags: tags,
+      matches: [],
     };
 
     try {
@@ -115,6 +122,8 @@ export default function Register() {
         if (!email.match("^[0-9]+@usc\.edu\.ph"))
           return setError("Please use a USC email.");
 
+        if (email)
+
         if (password != confirmpassword)
           return setError("Confirmation Password does not match.");
 
@@ -139,6 +148,16 @@ export default function Register() {
         break;
 
       case (3):
+        if (gotoPage == 3) setPage(gotoPage);
+        else {
+          if (profileImage == null && gotoPage == 4) return setError("Please upload an image of your face.");
+         
+          if (error != "") setError("");
+          setPage(gotoPage);
+        }
+        break;
+      
+      case (4):
         if (error != "") setError("");
         setPage(gotoPage);
         break;
@@ -146,48 +165,6 @@ export default function Register() {
       default:
         break;
     };
-  };
-
-  const handleSubmitTest = async (e) => {
-    e.preventDefault();
-    
-    if (profileImage == null)
-      return setError("Please upload an image of your face.");
-    else setError("");
-      
-    setLoading(true);
-
-
-
-    try {
-      let selectZodiacUsername = Math.floor(Math.random() * zodiacUsernames.length);
-      let selectRndNum = Math.floor(10000 + Math.random() * 90000);
-
-      let selection = [selectZodiacUsername, selectRndNum];
-
-      const creds = {
-        username: zodiacUsernames[selection[0]] + "_" + selection[1],
-        uProfile: zodiacAvatarURLs[selection[0]],
-        fname: fname,
-        lname: lname,
-        uscID: email.replace("@usc.edu.ph", ""),
-        block: block,
-        email: email,
-        password: password,
-        desc: desc,
-        tags: tags,
-      };
-
-      await registerAsync(creds);
-      console.log(creds)
-      setLoading(false);
-      navigate("/login")
-    } catch (error) {
-      const message = error.code;
-      setError(message);
-      setLoading(false)
-    }
-
   };
 
 
@@ -279,12 +256,39 @@ export default function Register() {
               <button className='btnBack' onClick={(e) => handlePage(2, e)}>
                 <i id='arrow-left' className="fa-solid fa-arrow-left point-left"></i>{' Back'}
               </button>
+              <button className='btnProceed' onClick={(e) => handlePage(4, e)}>
+                {'Next '}<i id='arrow-right' className="fa-solid fa-arrow-right"></i>
+              </button>
+              
+            </div>
+          ) : (<div></div>)
+          }
+
+          {(page == 4) ? ( // Page 4
+            <div className='form'>
+
+              {/* <div className='chbox'> */}
+                <input type='checkbox' onChange={()=>setTconfirm(!tconfirm)} id="termsncon" checked={tconfirm}></input>
+                <label className='cb' htmlFor="termscon">I have read and hereby accept the <a href={`${infolink}terms-and-conditions`}>Terms & Conditions</a>.</label>
+              {/* </div> */}
+
+              <div className='chbox'>
+              <input type='checkbox' onChange={()=>setPconfirm(!pconfirm)} id="privpol" checked={pconfirm}></input>
+              <label className='cb' htmlFor="privpol">I have read and hereby accept the <a href={`${infolink}privacy-policy`}>Privacy Policy</a>.</label>
+              </div>
+
+              <hr/>
+
+              <button className='btnBack' onClick={(e) => handlePage(3, e)}>
+                <i id='arrow-left' className="fa-solid fa-arrow-left point-left"></i>{' Back'}
+              </button>
               <button className='btnProceed' disabled={loading} onClick={handleSubmit}>
                 {loading ? 'Loading...' : 'Register'}
               </button>
             </div>
-          ) : (<div></div>)
+          ):(<div></div>)
           }
+
 
 
           <span className="link">

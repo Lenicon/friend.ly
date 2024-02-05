@@ -17,7 +17,7 @@ import Compressor from 'compressorjs';
 // }
 
 export default function Content() {
-    const {currentChat, auth, dispatch} = useContext(Context)
+    const {currentChat, auth, dispatch, user} = useContext(Context)
     const friend = currentChat?.friend;
     
     const [onMenu, setOnMenu] = useState(false);
@@ -188,6 +188,7 @@ export default function Content() {
                             {/* <span className='menu-item'>Reveal</span> */}
                             <span className='menu-item' onClick={handleFriendProfile}>Profile</span>
                             <span className='menu-item' onClick={handleCloseChat}>Close Chat</span>
+                            <span className='menu-item' onClick={()=>window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1263217725=User+Report&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")}>Report</span>
                         </div>
                         )}
                     </div>

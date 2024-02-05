@@ -15,7 +15,8 @@ export const Reducer = (state, action) => {
                     admin: action.payload.auth.admin,
                     uProfile: action.payload.auth.uProfile,
                     desc: action.payload.auth.desc,
-                    tags: action.payload.auth.tags
+                    tags: action.payload.auth.tags,
+                    matches: action.payload.auth.matches
                 },
                 user: action.payload.user
             };
@@ -26,12 +27,26 @@ export const Reducer = (state, action) => {
                     profile: action.payload.profile?.url,
                     fname: action.payload.fname,
                     lname: action.payload.lname,
+                    tags: action.payload.tags,
+                    desc: action.payload.desc
                 },
                 user: {
                     profile: action.payload.profile,
                     fname: action.payload.fname,
-                    lname: action.payload.lname
+                    lname: action.payload.lname,
+                    tags: action.payload.tags,
+                    desc: action.payload.desc
                 },
+            };
+        case "UPDATE_MATCHES":
+            return {
+                ...state,
+                auth: {
+                    matches: action.payload.matches
+                },
+                user: {
+                    matches: action.payload.matches
+                }
             };
         case "LOAD_USERS":
             return{

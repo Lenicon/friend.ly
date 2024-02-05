@@ -75,6 +75,15 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
     }
 }
 
+export const updateMatchesAsync = async(id, matchesArr) => {
+    try {
+        let userDoc = doc(db, "users", id)
+        await updateDoc(userDoc, {matches: matchesArr});;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // delete user
 
 // get all users
@@ -136,6 +145,7 @@ export const createConversationAsync = async(userId, friendId)=>{
                         uProfile: user_data.uProfile,
                         desc: user_data.desc,
                         tags: user_data.tags,
+                        matches: user_data.matches,
                     }
                 }
             }
@@ -145,6 +155,17 @@ export const createConversationAsync = async(userId, friendId)=>{
         return result;
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const getConversationAsync = async (id) => {
+    try {
+        const convDoc = doc(db, "conversations", id);
+        const snapshot = await getDoc(convDoc);
+        return getSnapshotData(snapshot);
+        // getDoc(doc(db, "conversations", convoID))
+    }catch(error){
+        console.error(error);
     }
 }
 

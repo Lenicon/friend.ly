@@ -138,6 +138,15 @@
   text-align: center;
 }
 
+.register .form .cb {
+  color: var(--black);
+  font-size: 1rem;
+}
+.register .form a {
+  color: var(--green);
+  text-decoration: underline;
+}
+
 .register .btnProceed{
   width: 100%;
 }
