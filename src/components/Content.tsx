@@ -186,9 +186,12 @@ export default function Content() {
                         {onMenu && (
                             <div className="menu-wrapper">
                             {/* <span className='menu-item'>Reveal</span> */}
-                            <span className='menu-item' onClick={handleFriendProfile}>Profile</span>
-                            <span className='menu-item' onClick={handleCloseChat}>Close Chat</span>
-                            <span className='menu-item' onClick={()=>window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1263217725=User+Report&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")}>Report</span>
+                            <span title='See the profile of this user.' className='menu-item' onClick={handleFriendProfile}>User Profile</span>
+                            <span title='Reveal YOUR identity to this user.' className='menu-item' onClick={handleCloseChat}>Reveal Identity</span>
+                            {/* <span className='menu-item' onClick={handleCloseChat}>Close Chat</span> */}
+                            <span title='Report this user to the Admins.' className='menu-item' onClick={()=>window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1263217725=User+Report&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")}>Report User</span>
+                            <span title='Close this chat.' className='menu-item' onClick={handleCloseChat}>Close Chat</span>
+
                         </div>
                         )}
                     </div>

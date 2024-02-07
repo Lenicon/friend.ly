@@ -13,6 +13,7 @@ import {
     getConversationAsync,
     getConversationsQueryByUser,
     getSnapshotData,
+    getUserAsync,
     updateMatchesAsync
 } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
@@ -28,8 +29,6 @@ export default function SideBar() {
     const [onProfile, setOnProfile] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [conversations, setConversations] = useState([]);
-    const [matches, setMatches] = useState([]);
-    const [fmatches, setFMatches] = useState([]);
 
     /*
         This is the add conversation feature.
@@ -112,7 +111,8 @@ export default function SideBar() {
                   uProfile: friend.uProfile,
                   profile: friend.profile ? friend.profile.url : "",
                   desc: friend.desc,
-                  tags: friend.tags
+                  tags: friend.tags,
+                  matches: friend.matches
                 },
               });
             }
@@ -170,23 +170,26 @@ export default function SideBar() {
         return maxIndex;
     }
 
-    const checkMatch = async () => {
-        if (user.matches.length > 0){
-            let um = user.matches[user.matches.length-1];
-            let gc = await getConversationAsync(um);
-            if (gc.createdAt == null){
-                await alert("Message your match!");
-                return setNewChat(false);
-            }
-        }
-    }
+    // const checkMatch = async () => {
+        
+    // }
 
     const handleCreateFriend = async () => {
         if (auth == null || auth == undefined) return setNewChat(false);
         if (user == null || user == undefined) return setNewChat(false);
         if (contacts == null || contacts == undefined) return setNewChat(false);
         
-        await checkMatch();
+        if (user.matches.length > 0){
+            let um = user.matches[user.matches.length-1];
+            let gc = await getConversationAsync(um);
+            if (gc){
+                if (gc.last.createdAt == null || gc.last.createdAt == undefined){
+                    await alert("Message your match!");
+                    return setNewChat(false);
+                }
+            }
+            
+        }
 
         let friendlist = [];
         for(let fl = 0; fl < 5; fl++){
@@ -194,26 +197,21 @@ export default function SideBar() {
         }
 
         if (friendlist.length > 0){
-            console.log("1. friendlist ", friendlist);
             
             let matchAlgo = [];
             for(let i = 0; i < 5; i++){
                 await matchAlgo.push(algorithm(user.tags, friendlist[i].tags, friendlist[i].matches.length));
-                   
             }
 
             if (matchAlgo.length > 0){
                 let tagPriority;
                 tagPriority = indexOfMax(matchAlgo);
-                console.log(tagPriority)
 
                 if (tagPriority == undefined || tagPriority == null) {
                     return setNewChat(false);
                 }
     
                 let friend = friendlist[tagPriority];
-                console.log("friend", friend);
-    
     
                 if (friend){
                     const conv = conversations.find((c) => c.friend.id == friend.id);
@@ -224,55 +222,46 @@ export default function SideBar() {
                         localStorage.setItem("convId", JSON.stringify(conv.id));
                         setNewChat(false);
                     } else {
-                        console.log("bfor setmatches ", matches, fmatches);
-                        await setMatches(user.matches);
-                        await setFMatches(friend.matches);
-
-                        const res = await createConversationAsync(auth.id, friend.id);
                         
-                        if (friend.id in user.matches) return setMatches([]);
-                        if (user.id in friend.matches) return setFMatches([]);
+                        const gayuser = await getUserAsync(user.id);
+                        const gayfriend = await getUserAsync(friend.id);
+                        
 
-                        // await matches.push(friend.id);
-                        // await fmatches.push(user.id);
-                        // await setMatches(matches);
-                        // await setFMatches(friend.matches);
+                        if (gayfriend && gayuser){
 
-                        if (res) {
-                            await matches.push(res.id);
-                            await fmatches.push(res.id);
-                            await updateMatchesAsync(user.id, matches);
-                            await updateMatchesAsync(friend.id, fmatches);
-                            await localStorage.setItem("convId", JSON.stringify(res.id));
-                            location.reload();
+                            const res = await createConversationAsync(auth.id, friend.id);
+
+                            if (res) {
+                                
+                                await updateMatchesAsync(user.id, res.id);
+                                await updateMatchesAsync(friend.id, res.id);
+
+                                await localStorage.setItem("convId", JSON.stringify(res.id));
+                                location.reload();
+                            }
                         }
-                        setMatches([]);
-                        setFMatches([]);
-                        setNewChat(false);
+
+                        await setNewChat(false);
                     }
                 }
             }
             else return setNewChat(false);
-
         }
-    
-
         await setTimeout(()=>setNewChat(false), 3000);
-        // const getMatches = users.find(c => c.tags in auth.tags);
-        // console.log(getMatches);
-
     }
 
-    const handleSelectConversation = (conv) => {
-        
+
+    const handleSelectConversation = (conv) => {  
         dispatch({type:"SET_CURRENT_CHAT", payload: conv});
         localStorage.setItem("convId", JSON.stringify(conv.id));
     }
+
 
     const handleLogout =async () => {
         await logoutAsync();
         dispatch(signOut());
     };
+
 
     const handleCloseChat = () => {
         dispatch({ type: "SET_CURRENT_CHAT", payload: null });
@@ -294,8 +283,6 @@ export default function SideBar() {
                 </div>
                 <span className='logo'><b>YOU: {auth?.username}</b></span>
                 {newChat && <Friendr/>}
-                {/* {!newChat && <span className='logo'><b>YOU: {auth?.username}</b></span>} */}
-                {/* {newChat && <span className='heading'>Add Conversation</span>} */}
                 <div
                     title='Make a Friend!'
                     className={"app-icon"}
@@ -303,6 +290,7 @@ export default function SideBar() {
                         await setNewChat((prev)=>!prev);
                         handleCloseChat();
                         handleCreateFriend();
+                        // testgayporn();
                     }}>
                     <i className='fa-solid fa-plus'></i>
                 </div>
@@ -318,27 +306,6 @@ export default function SideBar() {
                     </div>
                 </div>
                 <div className="center-wrapper">
-                    {/* {newChat ? (
-                        <div className="items-wrapper">
-                            {contacts.map((contact)=>(
-                                <ContactItem
-                                    createConversation={handleCreateConversation}
-                                    contact={contact}
-                                    key={contact?.id}/>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="items-wrapper">
-                            {conversations.map((chat)=>(
-                                <ChatItem
-                                    chat={chat}
-                                    active={chat?.id == currentChat?.id}
-                                    selectConversation={handleSelectConversation}
-                                    key={chat?.id}
-                                />
-                            ))}
-                        </div>
-                    )} */}
                     <div className="items-wrapper">
                             {conversations.map((chat)=>(
                                 <ChatItem

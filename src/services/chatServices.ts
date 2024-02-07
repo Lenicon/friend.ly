@@ -75,10 +75,11 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
     }
 }
 
-export const updateMatchesAsync = async(id, matchesArr) => {
+export const updateMatchesAsync = async(id, convoID) => {
     try {
         let userDoc = doc(db, "users", id)
-        await updateDoc(userDoc, {matches: matchesArr});;
+        await updateDoc(userDoc, {matches: arrayUnion(convoID)});
+        
     } catch (error) {
         console.error(error);
     }

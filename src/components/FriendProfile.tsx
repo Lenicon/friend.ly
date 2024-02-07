@@ -23,7 +23,7 @@ export default function FriendProfile({ open, setOpen }) {
                     </div>
                     <span className='realname'>{friend?.username}</span>
                     {/* <span className='email'>{"⁎⁎⁎⁎⁎⁎⁎⁎⁎⁎@usc.edu.ph"}</span> */}
-                    <p className='email'>{`[Other Info Hidden...]`}</p>
+                    <p className='email'>{`[Identity Hidden...]`}</p>
                     <div className='description'>
                         {/* <div className='desc-label'>About:</div>
                         <div>{friend?.desc}asdasdasdsadasdasdasdsdsasdasdadadasdasdasdasdasdd</div> */}
