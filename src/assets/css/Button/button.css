@@ -1,0 +1,32 @@
+.Button{
+    color: var(--white);
+    font-weight: bold;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 0.25rem;
+}
+
+.Button:hover{
+    opacity: 0.7;
+    color: black;
+}
+
+.Button.red-btn:hover{
+    background-color: rgb(203, 0, 0) !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+.Button.green-btn:hover{
+    opacity: 1 !important;
+    background-color: #00450d !important;
+    color: white !important;
+}
+
+.Button:focus{
+    outline: none;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+

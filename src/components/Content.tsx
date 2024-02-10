@@ -10,6 +10,8 @@ import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData } from
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
 import Compressor from 'compressorjs';
+import Dialog from './Dialog';
+import Confirm from './ConfirmDialog';
 
 // type Props={
 //     chat: boolean,
@@ -31,8 +33,35 @@ export default function Content() {
     const [loading, setLoading] = useState(false);
     const [onFriendProfile, setOnFriendProfile] = useState(false);
 
+    const [cdRev, setCDRev] = useState(false);
+    const [fsAlert, setFSAlert] = useState(false);
 
     const scrollRef = useRef(null);
+
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+
+    const [notOnSidebar, setNotOnSidebar] = useState(true);
+
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistance = 50 
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+        setTouchStart(e.targetTouches[0].clientX)
+    }
+
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return
+        const distance = touchStart - touchEnd
+        const isRightSwipe = distance < -minSwipeDistance
+        if (isRightSwipe) {
+            handleCloseChat()
+        }
+        // add your conditional logic here
+    }
 
     useEffect(()=>{
         return scrollRef.current?.scrollIntoView({behavior:"smooth"});
@@ -126,7 +155,7 @@ export default function Content() {
             }
             if(fs > 2000000) {
                 console.log(fs);
-                return alert("Warning: File Size should not be more than 2MB!");
+                return setFSAlert(true);
             }
         }
         
@@ -163,9 +192,26 @@ export default function Content() {
         else setOnFriendProfile(true);
     }
 
+    const handleRevealIdentity = async() => {
+        await setCDRev(false);
+        return
+    }
+
     return (
-    <div className={currentChat? "content active": "content"}>
-        {  currentChat ? (
+    <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={currentChat? "content active": "content"}>
+        <Dialog open={fsAlert} onClose={()=>setFSAlert(false)}>
+            Warning: File size should not be more than 2MB!
+        </Dialog>
+        <Confirm
+            open={cdRev}
+            onClose={()=>setCDRev(false)}
+            onConfirm={()=>handleRevealIdentity()}
+            title='Reveal Identity'
+        >
+            {`Are you ready to take the next step with ${friend?.username}? Clicking "Yes" means sharing some basic info like your name and face. Prefer to stay anonymous for now? Click "No".`}
+        </Confirm>
+
+        {  currentChat || notOnSidebar ? (
             <div className='wrapper'>
                 <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile}/>
                 <div className='top'>
@@ -187,7 +233,7 @@ export default function Content() {
                             <div className="menu-wrapper">
                             {/* <span className='menu-item'>Reveal</span> */}
                             <span title='See the profile of this user.' className='menu-item' onClick={handleFriendProfile}>User Profile</span>
-                            <span title='Reveal YOUR identity to this user.' className='menu-item' onClick={handleCloseChat}>Reveal Identity</span>
+                            <span title='Reveal YOUR identity to this user.' className='menu-item' onClick={()=>setCDRev(true)}>Reveal Identity</span>
                             {/* <span className='menu-item' onClick={handleCloseChat}>Close Chat</span> */}
                             <span title='Report this user to the Admins.' className='menu-item' onClick={()=>window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1263217725=User+Report&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")}>Report User</span>
                             <span title='Close this chat.' className='menu-item' onClick={handleCloseChat}>Close Chat</span>
@@ -223,7 +269,7 @@ export default function Content() {
                     {images.length > 0 && (
                         <div className="images-preview">
                             {images.map(image=>(
-                                <div className="image-item" key={image?.id}>
+                                <div className="image-item" key={image?.id} onClick={()=>handleRemoveImage(image.id)}>
                                     <img src={URL.createObjectURL(image?.file)} alt=""/>
                                     <i onClick={()=>handleRemoveImage(image.id)} className='fa-solid fa-rectangle-xmark'></i>
                                 </div>

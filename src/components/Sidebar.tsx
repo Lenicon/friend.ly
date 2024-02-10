@@ -3,7 +3,6 @@ import "../assets/css/sidebar.css";
 
 import Avatar from './Avatar';
 import ChatItem from './ChatItem';
-import ContactItem from './ContactItem';
 import Profile from './Profile';
 import { logoutAsync } from '../services/authServices';
 import { Context } from '../context/Context';
@@ -18,6 +17,7 @@ import {
 } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import Friendr from "../components/Friendr";
+import Dialog from './Dialog';
 
 // type Props = {
 //     setChat: (chat: boolean) => void,
@@ -29,17 +29,29 @@ export default function SideBar() {
     const [onProfile, setOnProfile] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [conversations, setConversations] = useState([]);
+    
+    const [matchAlert, setMatchAlert] = useState(false);
 
-    /*
-        This is the add conversation feature.
-        right now it's just like messenger's where you can add any user into your convo.
-        Change this later to go to the finder page whenever they click the plus button.
-        The users they match with will then be random
-        
-        THIS IS JUST A TEST FOR NOW, DONT FORGET
-        vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    */
-    // let contacts = users;
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistance = 50 
+
+    const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX)
+    }
+
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+
+    const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+        const distance = touchStart - touchEnd
+        const isLeftSwipe = distance > minSwipeDistance
+        if (isLeftSwipe) handleSelectConversation(JSON.parse(localStorage.getItem("prevConv")));
+    // add your conditional logic here
+    }
 
     useEffect(()=>{
         users && setContacts(users);
@@ -74,16 +86,6 @@ export default function SideBar() {
             }
         }
     }
-
-    /*
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        This is the add conversation feature.
-        right now it's just like messenger's where you can add any user into your convo.
-        Change this later to go to the finder page whenever they click the plus button.
-        The users they match with will then be random
-        
-        THIS IS JUST A TEST FOR NOW, DONT FORGET
-    */
 
     useEffect(()=>{
         loadConversations();
@@ -126,27 +128,6 @@ export default function SideBar() {
         });
       };
 
-    // const handleCreateConversation = async (friendId) => {
-        
-    //     if (auth == null) return;
-    //     // check if conversation exists
-    //     const conv = conversations.find((c) => c.friend.id == friendId);
-        
-    //     if (conv) {
-    //       // set conv als current conversation
-    //       dispatch({ type: "SET_CURRENT_CHAT", payload: conv });
-    //       localStorage.setItem("convId", JSON.stringify(conv.id));
-    //       setNewChat(false);
-    //     } else {
-    //       // let's create first a conversation
-    //       const res = await createConversationAsync(auth.id, friendId);
-    //       if (res) {
-    //         localStorage.setItem("convId", JSON.stringify(res.id));
-    //         setNewChat(false);
-    //       }
-    //     }
-    // };
-
     function algorithm(tagArrA, tagArrB, matchVal) {
         var tagVal = 1;
         for (let i=0; i<tagArrA.length; i++) {
@@ -184,7 +165,7 @@ export default function SideBar() {
             let gc = await getConversationAsync(um);
             if (gc){
                 if (gc.last.createdAt == null || gc.last.createdAt == undefined){
-                    await alert("Message your match!");
+                    await setMatchAlert(true);
                     return setNewChat(false);
                 }
             }
@@ -254,6 +235,7 @@ export default function SideBar() {
     const handleSelectConversation = (conv) => {  
         dispatch({type:"SET_CURRENT_CHAT", payload: conv});
         localStorage.setItem("convId", JSON.stringify(conv.id));
+        localStorage.setItem("prevConv", JSON.stringify(conv));
     }
 
 
@@ -270,7 +252,7 @@ export default function SideBar() {
     
 
     return (
-    <div className='sidebar'>
+    <div className='sidebar' onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
         <Profile open={onProfile} setOpen={setOnProfile} />
         
         <div className='wrapper'>
@@ -282,7 +264,10 @@ export default function SideBar() {
                     />
                 </div>
                 <span className='logo'><b>YOU: {auth?.username}</b></span>
-                {newChat && <Friendr/>}
+                <Dialog open={matchAlert} onClose={()=>setMatchAlert(false)}>
+                    <span style={{color:"black"}}>Message your latest match first!</span>
+                </Dialog>
+                <Friendr open={newChat}/>
                 <div
                     title='Make a Friend!'
                     className={"app-icon"}
@@ -324,7 +309,7 @@ export default function SideBar() {
                 </button>
                 <div className='info-btn'>
                     <button title='Contact Support' className='btn' onClick={()=>{
-                        window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")
+                        window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1128661337=${auth?.id}&entry.379855328=${currentChat?.id}&entry.1414077091=${auth?.id}&entry.481005644=${auth?.id}`, "_blank")
                     }}>
                         <i className='fa-solid fa-headset'/>
                     </button>

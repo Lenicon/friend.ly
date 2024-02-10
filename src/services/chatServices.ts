@@ -119,7 +119,8 @@ export const createConversationAsync = async(userId, friendId)=>{
         const conv = {
             members: [userId, friendId],
             last: {message: "", createdAt: null},
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            revealed: []
         };
 
         const convDoc = await addDoc(collection(db, "conversations"), conv)

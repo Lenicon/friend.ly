@@ -14,7 +14,7 @@
 }
 
 .friendr .wrapper {
-    width: 320px;
+    width: 300px;
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: row;
@@ -28,9 +28,11 @@
     box-shadow: 0 0 10px 2px rgba(18, 41, 19, 0.4);
     font-size: 30px;
     text-align: center;
+    position: absolute;
 }
 
 .friendr .wrapper .content {
     /* height: 50%; */
     font-size: 30px;
   }
+  

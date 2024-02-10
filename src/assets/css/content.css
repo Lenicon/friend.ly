@@ -163,7 +163,9 @@
     background-color: var(--bg-light);
     position: relative;
     border: var(--border-light);
+    cursor: pointer
 }
+
 
 .images-preview .image-item img {
     height: 100%;

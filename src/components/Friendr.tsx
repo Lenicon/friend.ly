@@ -1,6 +1,17 @@
 import '../assets/css/friendr.css'
+import Dialog from './Dialog'
 
-export default function Friendr() {
+interface Props {
+  open: boolean;
+  // onClose: Function;
+}
+
+export default function Friendr(props:Props) {
+  const {open} = props;
+
+  if (!open) {
+    return <></>;
+  }
 
   return (
     <div className='friendr'>
@@ -12,5 +23,9 @@ export default function Friendr() {
         </div>
       </div>
     </div>
+    // <Dialog open={open} onClose={onClose}>
+    //   <div className='rotate'><i className='fa-solid fa-spinner'></i></div>
+    //   Finding Friend...
+    // </Dialog>
   )
 }

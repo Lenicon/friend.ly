@@ -286,7 +286,7 @@ export default function Register() {
                 {loading ? 'Loading...' : 'Register'}
               </button>
             </div>
-          ):(<div></div>)
+          ):(<></>)
           }
 
 

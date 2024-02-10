@@ -1,0 +1,15 @@
+.iconButton{
+    border-radius: 9999px;
+    padding: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.iconButton:hover {
+    background-color: rgba(165, 165, 165, 0.336);
+}
+
+.iconButton:focus{
+    outline: none;
+    border: none;
+}
