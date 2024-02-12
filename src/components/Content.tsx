@@ -6,7 +6,7 @@ import ImageSlider from './ImageSlider';
 import InfoContainer from './InfoContainer';
 import { Context } from '../context/Context';
 import {v4 as getID} from 'uuid';
-import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData } from '../services/chatServices';
+import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
 import Compressor from 'compressorjs';
@@ -19,7 +19,7 @@ import Confirm from './ConfirmDialog';
 // }
 
 export default function Content() {
-    const {currentChat, auth, dispatch, user} = useContext(Context)
+    const {currentChat, auth, dispatch} = useContext(Context)
     const friend = currentChat?.friend;
     
     const [onMenu, setOnMenu] = useState(false);
@@ -34,14 +34,36 @@ export default function Content() {
     const [onFriendProfile, setOnFriendProfile] = useState(false);
 
     const [cdRev, setCDRev] = useState(false);
-    const [fsAlert, setFSAlert] = useState(false);
+    const [dalert, setDalert] = useState("");
 
     const scrollRef = useRef(null);
 
     const [touchStart, setTouchStart] = useState(null)
     const [touchEnd, setTouchEnd] = useState(null)
 
-    const [notOnSidebar, setNotOnSidebar] = useState(true);
+    const [revealed, setRevealed] = useState(false);
+    const [uRevealed, setURevealed] = useState(false);
+
+    useEffect(()=>{
+        loadFriendRevealInfo();
+        loadUserRevealInfo();
+    }, [currentChat?.revealed])
+
+    useEffect(()=>{
+        console.log(message);
+    }, [message])
+    
+    const loadFriendRevealInfo = () =>{
+        if (currentChat?.revealed.includes(friend?.id)){
+            return setRevealed(true);
+        }else return setRevealed(false);
+    }
+
+    const loadUserRevealInfo = () => {
+        if (currentChat?.revealed.includes(auth.id)){
+            return setURevealed(true);
+        }else return setURevealed(false);
+    }
 
     // the required distance between touchStart and touchEnd to be detected as a swipe
     const minSwipeDistance = 50 
@@ -145,6 +167,30 @@ export default function Content() {
         );
     };
 
+    const handleCreateMessageSystem = async(message) => {
+        if (currentChat == null) return;
+        setLoading(true);
+        try {
+            const msg = {
+                sender: auth.id,
+                receiver: currentChat.friend.id,
+                message,
+                images: []
+            };
+
+            const res = await createMessageAsync(msg, images, currentChat.id);
+            if(res){
+                // clear inputs if success
+                setMessage("");
+                setImages([]);
+                setLoading(false)
+            }
+        } catch (error) {
+            console.log(error);
+            setLoading(false)
+        }
+    }
+
     const handleCreateMessage = async() => {
         if (currentChat == null) return;
         if (!message && images?.length == 0) return;
@@ -155,7 +201,7 @@ export default function Content() {
             }
             if(fs > 2000000) {
                 console.log(fs);
-                return setFSAlert(true);
+                return setDalert("Total file size should not be more than 2MB.");
             }
         }
         
@@ -193,32 +239,43 @@ export default function Content() {
     }
 
     const handleRevealIdentity = async() => {
-        await setCDRev(false);
-        return
+        if (currentChat?.last.createdAt == null || currentChat?.last.createdAt == undefined){
+            return setDalert("You can't reveal yourself yet, talk to them first.");
+        }
+        if (uRevealed == false) {
+            await updateRevealedAsync(currentChat?.id, auth?.id);
+            await handleCreateMessageSystem(`${auth.username} has revealed their identity to you!`);
+            await setURevealed(true);
+        } else return setDalert("You have already revealed yourself to this person.")
+
+        return setCDRev(false);
     }
 
     return (
     <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={currentChat? "content active": "content"}>
-        <Dialog open={fsAlert} onClose={()=>setFSAlert(false)}>
-            Warning: File size should not be more than 2MB!
+        <Dialog open={dalert!=""?true:false} onClose={()=>setDalert("")}>
+            {dalert}
         </Dialog>
         <Confirm
             open={cdRev}
             onClose={()=>setCDRev(false)}
-            onConfirm={()=>handleRevealIdentity()}
+            onConfirm={()=>{
+                handleRevealIdentity();
+                //setMessage(`${auth.username} has revealed their identity to you! Refresh to see the changes.`);
+            }}
             title='Reveal Identity'
         >
-            {`Are you ready to take the next step with ${friend?.username}? Clicking "Yes" means sharing some basic info like your name and face. Prefer to stay anonymous for now? Click "No".`}
+            {`Are you ready to take the next step with ${revealed ? `${friend?.fname} ${friend?.lname}`:friend?.username}? Clicking "Yes" means sharing some basic info like your name and face. Prefer to stay anonymous for now? Click "No".`}
         </Confirm>
 
-        {  currentChat || notOnSidebar ? (
+        {  currentChat? (
             <div className='wrapper'>
                 <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile}/>
                 <div className='top'>
                     <div className='activateFriendProfile' onClick={handleFriendProfile}>
                         <Avatar
-                            src={friend?.uProfile ? friend.uProfile:""}
-                            username={friend?.username}
+                            src={revealed ? (friend?.profile ? friend.profile:""):(friend?.uProfile ? friend.uProfile:"") }
+                            username={revealed ? `${friend?.fname} ${friend?.lname}`:friend?.username}
                             height={50}
                             width={50}
                         />
@@ -233,7 +290,7 @@ export default function Content() {
                             <div className="menu-wrapper">
                             {/* <span className='menu-item'>Reveal</span> */}
                             <span title='See the profile of this user.' className='menu-item' onClick={handleFriendProfile}>User Profile</span>
-                            <span title='Reveal YOUR identity to this user.' className='menu-item' onClick={()=>setCDRev(true)}>Reveal Identity</span>
+                            {uRevealed == false? (<span title='Reveal YOUR identity to this user.' className='menu-item' onClick={()=>setCDRev(true)}>Reveal Identity</span>):(<></>)}
                             {/* <span className='menu-item' onClick={handleCloseChat}>Close Chat</span> */}
                             <span title='Report this user to the Admins.' className='menu-item' onClick={()=>window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform?usp=pp_url&entry.1263217725=User+Report&entry.1128661337=${auth.id}&entry.379855328=${currentChat.id}&entry.1414077091=${auth.id}&entry.481005644=${auth.id}`, "_blank")}>Report User</span>
                             <span title='Close this chat.' className='menu-item' onClick={handleCloseChat}>Close Chat</span>

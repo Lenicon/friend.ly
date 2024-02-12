@@ -40,6 +40,9 @@
     height: 100%;
     object-fit: contain;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 @media (pointer:fine){

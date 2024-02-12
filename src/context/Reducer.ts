@@ -16,6 +16,7 @@ export const Reducer = (state, action) => {
                     uProfile: action.payload.auth.uProfile,
                     desc: action.payload.auth.desc,
                     tags: action.payload.auth.tags,
+                    block: action.payload.auth.block,
                     matches: action.payload.auth.matches
                 },
                 user: action.payload.user

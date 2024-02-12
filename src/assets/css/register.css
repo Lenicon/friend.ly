@@ -5,6 +5,9 @@
   align-items: center;
   justify-content: center;
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .register .wrapper {
@@ -39,7 +42,7 @@
   padding: 0.5rem 0;
 }
 
-.register .wrapper .form input, .register .wrapper .form textarea {
+.register .wrapper .form input, .register .wrapper .form textarea{
   padding: 0.8rem 0.8rem;
   border-radius: 0.3rem;
   font-size: 1rem;
@@ -54,7 +57,30 @@
   width: 100%;
 }
 
-.register .wrapper .form input::placeholder, .register .wrapper .form textarea::placeholder {
+.register .wrapper .form .select {
+  /* padding: 0.8rem 0.8rem; */
+  /* height: 3em !important; */
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  border: var(--border) !important;
+  outline: none;
+  color: var(--black);
+  margin-bottom: 1rem;
+  resize: none;
+  scroll-behavior: smooth;
+  /* overflow-y: auto; */
+  display: inline-block;
+  width: 100%;
+}
+
+.register .wrapper .form .select:hover{
+  border-color: #00000033;
+}
+
+
+
+.register .wrapper .form input::placeholder, .register .wrapper .form textarea::placeholder,
+.register .wrapper .form select #selectnone {
   color: gray;
 }
 
@@ -138,10 +164,7 @@
   text-align: center;
 }
 
-.register .form .cb {
-  color: var(--black);
-  font-size: 1rem;
-}
+
 .register .form a {
   color: var(--green);
   text-decoration: underline;

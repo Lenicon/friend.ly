@@ -4,6 +4,9 @@
     background-color: var(--green);
     color: var(--white);
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .sidebar .wrapper {
@@ -135,6 +138,9 @@
     display: flex;
     gap: 1rem;
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .chat-item-infos {
@@ -158,6 +164,11 @@
 .chat-item-infos .avatar-infos .timeline{
     font-size: 12px;
     color: lightgray;
+}
+
+.chat-item-infos .nick {
+    color: lightgray;
+    margin-top: -0.4em;
 }
 
 @media (max-width: 820px) {

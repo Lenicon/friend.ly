@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import '../assets/css/login.css'
 import { loginAsync } from '../services/authServices';
 import { getUserAsync } from "../services/chatServices";
@@ -12,6 +12,10 @@ export default function Login() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // useEffect(()=>{
+  //   console.log(emailRef?.current.value, passRef?.current.value);
+  // }, [emailRef?.current.value, passRef?.current.value]);
 
   const clearInputs = () => {
     if (emailRef?.current) {
@@ -68,6 +72,9 @@ export default function Login() {
           </button>
           <span className="link">
             <a href='/register'>No account? Register here.</a>
+          </span>
+          <span className="link">
+              <a href='/passwordReset'>Forgot your password? Click here.</a>
           </span>
         </form>
       </div>

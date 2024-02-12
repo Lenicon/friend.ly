@@ -9,16 +9,13 @@ export default function ChatItem({chat, active, selectConversation}) {
   const [revealed, setRevealed] = useState(false);
 
   useEffect(()=>{
-      // loadFriendInfo();
-  }, [chat, revealed])
+      loadFriendRevealInfo();
+  }, [chat?.revealed])
 
-  const loadFriendInfo = async () =>{
-      const conv = await getConversationAsync(chat?.id);
-      if (conv){
-          if(chat?.friend?.id in conv?.revealed){
-              return setRevealed(true);
-          }
-      }
+  const loadFriendRevealInfo = async () =>{
+    if (chat?.revealed.includes(chat?.friend?.id)){
+        return setRevealed(true);
+    } else return setRevealed(false);
   }
 
   let lastMessage = "";
@@ -33,7 +30,7 @@ export default function ChatItem({chat, active, selectConversation}) {
     
     <div className={active ? "chat-item active" : 'chat-item'} onClick={()=>selectConversation(chat)}>
         <Avatar
-          src={!revealed? (chat?.friend?.uProfile ? chat.friend.uProfile : "") : (chat?.friend?.profile? chat?.friend.profile.url: "")}
+          src={!revealed? (chat?.friend?.uProfile ? chat.friend.uProfile : "") : (chat?.friend?.profile? chat?.friend.profile: "")}
           height={55} width={55}/>
         <div className='chat-item-infos'>
             <div className = 'avatar-infos'>
@@ -44,6 +41,7 @@ export default function ChatItem({chat, active, selectConversation}) {
                   </span>
                 )}
             </div>
+            {revealed? (<span className='username nick'>{chat?.friend?.username}</span>):(<></>)}
             <p className='last-message'>{lastMessage}</p>
         </div>
     </div>

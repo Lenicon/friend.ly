@@ -30,7 +30,7 @@ export default function SideBar() {
     const [contacts, setContacts] = useState([]);
     const [conversations, setConversations] = useState([]);
     
-    const [matchAlert, setMatchAlert] = useState(false);
+    const [dalert, setDalert] = useState("");
 
     const [touchStart, setTouchStart] = useState(null)
     const [touchEnd, setTouchEnd] = useState(null)
@@ -60,31 +60,19 @@ export default function SideBar() {
 
     const handleSearch=(e)=>{
         const toSearch = e.target.value;
-        if(newChat) {
-            //start new convo
-            if(toSearch){
-                // contacts =users.filter((usr)=>usr.username.toLowerCase().includes(toSearch.toLowerCase()));
-                setContacts(
-                    users.filter((usr)=>
-                        usr.username.toLowerCase().includes(toSearch.toLowerCase())
-                    )
-                );
-            } else {
-                // contacts = users;
-                setContacts(users)
-            }
-        } else {
-            //search conversations
-            if (toSearch) {
-                setConversations(
-                    chats.filter((chat) =>
-                        chat.friend.username.toLowerCase().includes(toSearch.toLowerCase())
-                    )
+        
+        //search conversations
+        if (toSearch) {
+            setConversations(
+                chats.filter((chat) =>
+                    chat.friend.username.toLowerCase().includes(toSearch.toLowerCase())||
+                    `${chat.friend.fname} ${chat.friend.lname}`.toLowerCase().includes(toSearch.toLowerCase())
                 )
-            } else {
-                setConversations(chats);
-            }
+            )
+        } else {
+            setConversations(chats);
         }
+        
     }
 
     useEffect(()=>{
@@ -156,79 +144,85 @@ export default function SideBar() {
     // }
 
     const handleCreateFriend = async () => {
-        if (auth == null || auth == undefined) return setNewChat(false);
-        if (user == null || user == undefined) return setNewChat(false);
-        if (contacts == null || contacts == undefined) return setNewChat(false);
-        
-        if (user.matches.length > 0){
-            let um = user.matches[user.matches.length-1];
-            let gc = await getConversationAsync(um);
-            if (gc){
-                if (gc.last.createdAt == null || gc.last.createdAt == undefined){
-                    await setMatchAlert(true);
-                    return setNewChat(false);
-                }
-            }
+        try {
+            if (auth == null || auth == undefined) return setNewChat(false);
+            if (user == null || user == undefined) return setNewChat(false);
+            if (contacts == null || contacts == undefined) return setNewChat(false);
             
-        }
-
-        let friendlist = [];
-        for(let fl = 0; fl < 5; fl++){
-            await friendlist.push(contacts[Math.floor(Math.random() * contacts.length)]);
-        }
-
-        if (friendlist.length > 0){
-            
-            let matchAlgo = [];
-            for(let i = 0; i < 5; i++){
-                await matchAlgo.push(algorithm(user.tags, friendlist[i].tags, friendlist[i].matches.length));
-            }
-
-            if (matchAlgo.length > 0){
-                let tagPriority;
-                tagPriority = indexOfMax(matchAlgo);
-
-                if (tagPriority == undefined || tagPriority == null) {
-                    return setNewChat(false);
-                }
-    
-                let friend = friendlist[tagPriority];
-    
-                if (friend){
-                    const conv = conversations.find((c) => c.friend.id == friend.id);
-    
-                    if (conv) {
-                        // set conv als current conversation
-                        dispatch({ type: "SET_CURRENT_CHAT", payload: conv });
-                        localStorage.setItem("convId", JSON.stringify(conv.id));
-                        setNewChat(false);
-                    } else {
-                        
-                        const gayuser = await getUserAsync(user.id);
-                        const gayfriend = await getUserAsync(friend.id);
-                        
-
-                        if (gayfriend && gayuser){
-
-                            const res = await createConversationAsync(auth.id, friend.id);
-
-                            if (res) {
-                                
-                                await updateMatchesAsync(user.id, res.id);
-                                await updateMatchesAsync(friend.id, res.id);
-
-                                await localStorage.setItem("convId", JSON.stringify(res.id));
-                                location.reload();
-                            }
-                        }
-
-                        await setNewChat(false);
+            if (user.matches.length > 0){
+                let um = user.matches[user.matches.length-1];
+                let gc = await getConversationAsync(um);
+                if (gc){
+                    if (gc.last.createdAt == null || gc.last.createdAt == undefined){
+                        await setDalert("Message your latest match first!");
+                        return setNewChat(false);
                     }
                 }
+                
             }
-            else return setNewChat(false);
+
+            let friendlist = [];
+            for(let fl = 0; fl < 5; fl++){
+                await friendlist.push(contacts[Math.floor(Math.random() * contacts.length)]);
+            }
+
+            if (friendlist.length > 0){
+                
+                let matchAlgo = [];
+                for(let i = 0; i < 5; i++){
+                    await matchAlgo.push(algorithm(user.tags, friendlist[i].tags, friendlist[i].matches.length));
+                }
+
+                if (matchAlgo.length > 0){
+                    let tagPriority;
+                    tagPriority = indexOfMax(matchAlgo);
+
+                    if (tagPriority == undefined || tagPriority == null) {
+                        return setNewChat(false);
+                    }
+        
+                    let friend = friendlist[tagPriority];
+        
+                    if (friend){
+                        const conv = conversations.find((c) => c.friend.id == friend.id);
+        
+                        if (conv) {
+                            // set conv als current conversation
+                            dispatch({ type: "SET_CURRENT_CHAT", payload: conv });
+                            localStorage.setItem("convId", JSON.stringify(conv.id));
+                            setNewChat(false);
+                        } else {
+                            
+                            const gayuser = await getUserAsync(user.id);
+                            const gayfriend = await getUserAsync(friend.id);
+                            
+
+                            if (gayfriend && gayuser){
+
+                                const res = await createConversationAsync(auth.id, friend.id);
+
+                                if (res) {
+                                    
+                                    await updateMatchesAsync(user.id, res.id);
+                                    await updateMatchesAsync(friend.id, res.id);
+
+                                    await localStorage.setItem("convId", JSON.stringify(res.id));
+                                    location.reload();
+                                }
+                            }
+
+                            await setNewChat(false);
+                        }
+                    }
+                }
+                else return setNewChat(false);
+            }
+            await setTimeout(()=>setNewChat(false), 3000);
+        } catch (error){
+            console.error(error);
+            setTimeout(()=>setNewChat(false), 1500);
+            return setTimeout(()=>setDalert("Weird, I could not find anyone to match you with."), 1400);
         }
-        await setTimeout(()=>setNewChat(false), 3000);
     }
 
 
@@ -254,6 +248,9 @@ export default function SideBar() {
     return (
     <div className='sidebar' onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
         <Profile open={onProfile} setOpen={setOnProfile} />
+        <Dialog open={dalert!=""?true:false} onClose={()=>setDalert("")}>
+            <span style={{color:"black"}}>{dalert}</span>
+        </Dialog>
         
         <div className='wrapper'>
             <div className='top'>
@@ -263,10 +260,7 @@ export default function SideBar() {
                         height={50} width={50}
                     />
                 </div>
-                <span className='logo'><b>YOU: {auth?.username}</b></span>
-                <Dialog open={matchAlert} onClose={()=>setMatchAlert(false)}>
-                    <span style={{color:"black"}}>Message your latest match first!</span>
-                </Dialog>
+                <span className='logo' title='Your anonymous username.'><b>{auth?.username}</b></span>
                 <Friendr open={newChat}/>
                 <div
                     title='Make a Friend!'

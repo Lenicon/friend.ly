@@ -2,25 +2,33 @@ import { useContext, useEffect, useState } from 'react';
 import Avatar from './Avatar';
 import { Context } from '../context/Context';
 import "../assets/css/friendProfile.css";
-import { getConversationAsync } from '../services/chatServices';
+import { getConversationAsync, getUserAsync } from '../services/chatServices';
 
 export default function FriendProfile({ open, setOpen }) {
     const { currentChat } = useContext(Context);
+    const [userFriend, setUserFriend] = useState(null);
     const friend = currentChat?.friend;
 
     const [revealed, setRevealed] = useState(false);
 
     useEffect(()=>{
-        loadFriendInfo();
-    }, [friend, open, revealed])
+        loadFriendRevealInfo();
+    }, [currentChat?.revealed])
 
-    const loadFriendInfo = async () =>{
-        // const conv = await getConversationAsync(friend?.id);
-        // if (conv){
-        //     if(friend?.id in conv?.revealed){
-        //         return setRevealed(true);
-        //     }
-        // }
+    useEffect(()=>{
+        getUser(friend?.id);
+    }, [revealed])
+
+    const loadFriendRevealInfo = async () =>{
+        if (currentChat?.revealed.includes(friend?.id)){
+            console.log(friend);
+            return setRevealed(true);
+        }else return setRevealed(false);
+    }
+
+    const getUser = async (id) =>{
+        const l = await getUserAsync(id);
+        return setUserFriend(l);
     }
 
     return (
@@ -58,11 +66,12 @@ export default function FriendProfile({ open, setOpen }) {
                     :
                     (<div className='friendProfile-infos'>
                         <div className='avatar-wrapper'>
-                            <Avatar src={friend?.profile ? friend.profile.url : ""} height={150} width={150} />
+                            <Avatar src={friend?.profile ? friend.profile : ""} height={150} width={150} />
                         </div>
                         <span className='realname'>{friend?.fname} {friend?.lname}</span>
                         
-                        <p className='email'>{friend?.email}</p>
+                        <p className='email'>{userFriend?.email}</p>
+                        <p className='email'>{userFriend?.block}</p>
                         <div className='description'>
                             <div className='user-desc'>
                                 {friend?.desc}

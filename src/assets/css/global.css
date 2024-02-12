@@ -140,3 +140,73 @@ button:hover {
     transform: rotate(135deg);
 }
 
+
+/* CHECK BOX */
+/* Customize the label (the container) */
+.cbcontainer {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100% !important;
+}
+
+/* Hide the browser's default checkbox */
+.cbcontainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.cbcheckmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: var(--bg-light);
+}
+
+/* On mouse-over, add a grey background color */
+.cbcontainer:hover input ~ .cbcheckmark {
+    background-color: var(--bg-dark);
+}
+
+/* When the checkbox is checked, add a blue background */
+.cbcontainer input:checked ~ .cbcheckmark {
+    background-color: var(--green);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.cbcheckmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.cbcontainer input:checked ~ .cbcheckmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.cbcontainer .cbcheckmark:after {
+    left: 7px;
+    top: 3px;
+    width: 4px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}

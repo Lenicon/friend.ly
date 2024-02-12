@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import {useContext} from "react";
 import { Context } from "./context/Context";
+import PasswordReset from "./pages/PasswordReset";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={auth? <Messenger/> : <Login/>} />
         <Route path="/login" element={auth? <Messenger/> : <Login/>} />
         <Route path="/register" element={auth? <Messenger/> : <Register/>} />
+        <Route path="/passwordReset" element={auth? <Messenger/> : <PasswordReset/>} />
         <Route path='*' element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

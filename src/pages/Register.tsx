@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../assets/css/register.css'
 import { registerAsync } from '../services/authServices';
 import { zodiacUsernames, zodiacAvatarURLs } from '../config/randConfig';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '../components/Avatar';
 import { v4 as getID } from "uuid";
 import TagsInput from '../components/TagsInput';
+import Select from 'react-select';
 
 
 export default function Register() {
@@ -26,12 +27,19 @@ export default function Register() {
   const [profileImage, setProfileImage] = useState(null);
   // const [profileImage2, setProfileImage2] = useState(null);
   const [tags, setTags] = useState([]);
+  const [matches, setMatches] =useState([]);
   const [tconfirm, setTconfirm] = useState(false);
   const [pconfirm, setPconfirm] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+
+  const blocksArray=[ 'S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'ST', 'T1', 'T2', 'T3', 'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7'];
+  const optionsBlock = [];
+  blocksArray.forEach((element)=>{
+    optionsBlock.push({value:`STEM 12 ${element}`, label:`STEM 12 ${element}`});
+  });
 
 
   const navigate = useNavigate();
@@ -91,7 +99,7 @@ export default function Register() {
       password: password,
       desc: desc,
       tags: tags,
-      matches: [],
+      matches: matches,
     };
 
     try {
@@ -115,9 +123,6 @@ export default function Register() {
       case (1):
         if (email == "" || password == "" || lname == "" || fname == "" || block == "")
           return setError("Please completely fill up the form.");
-
-        if (!block.match("^[STEM][1-9][0-9]*"))
-          return setError("Please input Class Block properly. (T2, S10, E7...)");
 
         if (!email.match("^[0-9]+@usc\.edu\.ph"))
           return setError("Please use a USC email.");
@@ -178,12 +183,38 @@ export default function Register() {
 
           {(page == 1) ? ( // Page 1
             <div className='form'>
-              <input required value={fname} onChange={(p) => setFname(p.target.value)} id='fname' type='text' placeholder='First Name' />
-              <input required value={lname} onChange={(p) => setLname(p.target.value)} id='lname' type='text' placeholder='Last Name' />
-              <input required value={block} maxLength={3} pattern='^[STEM][0-9][0-9]' onChange={(p) => {p.target.value.toUpperCase(); setBlock(p.target.value);}} id='block' type='text' placeholder='Block' />
-              <input required value={email} onChange={(p) => setEmail(p.target.value)} pattern='^[0-9]+@usc\.edu\.ph' id="email" type='email' placeholder='USC Email' />
-              <input required value={password} onChange={(p) => setPassword(p.target.value)} id="password" type='password' placeholder='Password' minLength={8} />
-              <input required value={confirmpassword} onChange={(p) => setConfirmPassword(p.target.value)} id="confirmpassword" type='password' placeholder='Confirm Password' minLength={8} />
+              <input required value={fname} onChange={(p) => setFname(p.target.value)} id='fname' type='text' placeholder='First Name' aria-label='firstname'/>
+              <input required value={lname} onChange={(p) => setLname(p.target.value)} id='lname' type='text' placeholder='Last Name' aria-label='lastname' />
+              {/* <input required value={block} maxLength={3} pattern='^[STEM][0-9][0-9]' onChange={(p) => {p.target.value.toUpperCase(); setBlock(p.target.value);}} id='block' type='text' placeholder='Block' /> */}
+              {/* onFocus={()=>this.size=8} onBlur={()=>this.size=1} onChange={()=>{this.size=1; this.blur();}} */}
+
+              <Select
+              placeholder='Select Block...'
+              styles={{
+                // option: (defaultStyles, state) => ({
+                //   ...defaultStyles,
+                //   color: state.isSelected ? "#fff" : "#333",
+                //   backgroundColor: [state.isFocused ? "#066418":"#fff", state.isSelected ? "#066418":"#fff"],
+                //   '&:hover': state.isSelected ? '#066418':"#066418"
+                // }),
+                control: (defaultStyles) => ({
+                  ...defaultStyles,
+                  border: 'none',
+                  borderColor: '#00000033',
+                  height:'3em',
+                  color: "#333"
+                })
+              }}
+              className='select'
+              options={optionsBlock}
+              autoFocus={true}
+              onChange={(selected)=>
+                setBlock(selected.value)
+              }></Select>
+
+              <input aria-label='email' required value={email} onChange={(p) => setEmail(p.target.value)} pattern='^[0-9]+@usc\.edu\.ph' id="email" type='email' placeholder='USC Email' />
+              <input aria-label='password' required value={password} onChange={(p) => setPassword(p.target.value)} id="password" type='password' placeholder='Password' minLength={8} />
+              <input aria-label='confirmpassword' required value={confirmpassword} onChange={(p) => setConfirmPassword(p.target.value)} id="confirmpassword" type='password' placeholder='Confirm Password' minLength={8} />
               <hr/>
 
               <button className='btnProceed' onClick={(e) => handlePage(2, e)}>
@@ -231,6 +262,7 @@ export default function Register() {
                     accept='.jpg,.jpeg,.png'
                     id="upload-image"
                     onChange={handleImages}
+                    aria-label='upload-image'
                   />
                   {profileImage ? (
                     <Avatar
@@ -267,15 +299,16 @@ export default function Register() {
           {(page == 4) ? ( // Page 4
             <div className='form'>
 
-              {/* <div className='chbox'> */}
+              <label className='cbcontainer' htmlFor="termsncon">I have read and hereby accept the <a href={`${infolink}terms-and-conditions`}>Terms & Conditions</a>.
                 <input type='checkbox' onChange={()=>setTconfirm(!tconfirm)} id="termsncon" checked={tconfirm}></input>
-                <label className='cb' htmlFor="termscon">I have read and hereby accept the <a href={`${infolink}terms-and-conditions`}>Terms & Conditions</a>.</label>
-              {/* </div> */}
-
-              <div className='chbox'>
-              <input type='checkbox' onChange={()=>setPconfirm(!pconfirm)} id="privpol" checked={pconfirm}></input>
-              <label className='cb' htmlFor="privpol">I have read and hereby accept the <a href={`${infolink}privacy-policy`}>Privacy Policy</a>.</label>
-              </div>
+                <span className='cbcheckmark'></span>
+              </label>
+          
+              <label className='cbcontainer' htmlFor="privpol">I have read and hereby accept the <a href={`${infolink}privacy-policy`}>Privacy Policy</a>.
+                <input type='checkbox' onChange={()=>setPconfirm(!pconfirm)} id="privpol" checked={pconfirm}></input>
+                <span className='cbcheckmark'></span>
+              </label>
+              
 
               <hr/>
 

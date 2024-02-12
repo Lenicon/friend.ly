@@ -27,6 +27,9 @@
 
 .menu-icon{
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     position: relative;
     color: var(--green);
 }
@@ -86,6 +89,9 @@
     border: none;
     background-color: var(--bg-light);
     user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .content .wrapper .center{
@@ -119,6 +125,9 @@
 }
 
 .timeline {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }
 

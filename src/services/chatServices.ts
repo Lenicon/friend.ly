@@ -31,17 +31,17 @@ export const createUserAsync = async(creds)=>{
             desc: creds.desc||null,
             tags: creds.tags||null,
             uProfile: creds.uProfile||null,
-            profile: creds.profile||null,
             matches: creds.matches,
             isAdmin: false,
             createdAt: serverTimestamp()||null,
         }
-        return await setDoc(doc(db, "users", creds.uid), user).then((res)=>{
+        await setDoc(doc(db, "users", creds.uid), user).then((res)=>{
             console.log("response: ", res);
         })
         .catch((err)=>{
-            console.log("Error: ", err);
+            console.error("Error: ", err);
         });
+        return await updateUserAsync(user, creds.profile);
     } catch (error) {
         console.error(error);
     }
@@ -75,10 +75,40 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
     }
 }
 
+// export const updateProfileAsync = async(updatedUser, profileImage) => {
+//     try {
+//         const tempUser = {profile:null};
+//         const creds = auth.currentUser;
+//         const userDoc = doc(db, "users", creds.uid);
+
+//         if (profileImage){
+//             const location = `images/users/${creds.uid}/profile/`;
+//             await deleteAllFiles(location);
+//             const urls = await uploadFiles([profileImage], location);
+//             if (urls.length > 0) {
+//                 tempUser.profile = urls[0];
+
+//             }
+//         }
+//     }catch (error){
+//         console.error(error);
+//     }
+// }
+
 export const updateMatchesAsync = async(id, convoID) => {
     try {
         let userDoc = doc(db, "users", id)
         await updateDoc(userDoc, {matches: arrayUnion(convoID)});
+        
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const updateRevealedAsync = async(id, userID) => {
+    try {
+        let userDoc = doc(db, "conversations", id)
+        await updateDoc(userDoc, {revealed: arrayUnion(userID)});
         
     } catch (error) {
         console.error(error);
@@ -112,6 +142,23 @@ export const getUserAsync = async (id) => {
     }
 };
 
+export const checkUserExistByEmail = async (email) => {
+    try{
+        const snapshots = await getDocs(
+            query(collection(db, "users"), where("email", "==", email))
+        );
+        
+        const s = snapshots.docs.map((item)=>getSnapshotData(item))
+        if (s.length == 0) return false;
+        else return true
+
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+    
+}
+
 // conversations
 export const createConversationAsync = async(userId, friendId)=>{
     try {
@@ -141,8 +188,11 @@ export const createConversationAsync = async(userId, friendId)=>{
                     friend: {
                         id: user_data.id,
                         username: user_data.username,
+                        uscID:user_data.uscID,
+                        block:user_data.block,
                         fname: user_data.fname,
                         lname: user_data.lname,
+                        email: user_data.email,
                         profile: user_data.profile,
                         uProfile: user_data.uProfile,
                         desc: user_data.desc,

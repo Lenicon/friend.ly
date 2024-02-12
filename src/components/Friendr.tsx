@@ -1,5 +1,4 @@
 import '../assets/css/friendr.css'
-import Dialog from './Dialog'
 
 interface Props {
   open: boolean;
