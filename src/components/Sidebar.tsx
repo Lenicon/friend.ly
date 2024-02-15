@@ -65,8 +65,9 @@ export default function SideBar() {
         if (toSearch) {
             setConversations(
                 chats.filter((chat) =>
-                    chat.friend.username.toLowerCase().includes(toSearch.toLowerCase())||
-                    `${chat.friend.fname} ${chat.friend.lname}`.toLowerCase().includes(toSearch.toLowerCase())
+                    chat.friend.username.toLowerCase().includes(toSearch.toLowerCase())
+                    // ||
+                    // `${chat.friend.fname} ${chat.friend.lname}`.toLowerCase().includes(toSearch.toLowerCase())
                 )
             )
         } else {
@@ -247,7 +248,7 @@ export default function SideBar() {
 
     return (
     <div className='sidebar' onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
-        <Profile open={onProfile} setOpen={setOnProfile} />
+        <Profile open={onProfile} setOpen={setOnProfile} setDalert={setDalert} />
         <Dialog open={dalert!=""?true:false} onClose={()=>setDalert("")}>
             <span style={{color:"black"}}>{dalert}</span>
         </Dialog>

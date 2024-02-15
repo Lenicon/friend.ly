@@ -52,7 +52,7 @@ export default function PasswordReset() {
         <div className='wrapper'>
             <h2 className='heading'>Password Reset</h2>
             
-            <form className='form'>
+            <form id='passwordResForm' className='form'>
                 {error && <span className='error-msg'>{error}</span>}
                 <label className='label-resemail'>To reset your password, enter the email address linked to your account and we'll send you a secure link.</label>
                 

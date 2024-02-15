@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import "../assets/css/profile.css";
 import Avatar from './Avatar';
 import { Context } from '../context/Context';
@@ -7,15 +7,20 @@ import { updateUserAsync } from '../services/chatServices';
 import { updateProfile } from '../context/Actions';
 import TagsInput from './TagsInput';
 
-export default function Profile({ open, setOpen }) {
-    const { user, dispatch } = useContext(Context);
+export default function Profile({ open, setOpen, setDalert }) {
+    const { user, dispatch, auth } = useContext(Context);
     const [onEdit, setOnEdit] = useState(false);
     const [fname, setFname] = useState("");
     const [lname, setLname] = useState("");
     const [desc, setDesc] = useState("");
     const [tags, setTags] = useState([]);
+    // const [dalert, setDalert] = useState("");
 
     const [profileImage, setProfileImage] = useState(null);
+
+    // useEffect(()=>{
+    //     console.log(setDalert);
+    // }, [setDalert]);
 
     const handleOnEdit = () => {
         if (!user) return;
@@ -61,9 +66,20 @@ export default function Profile({ open, setOpen }) {
         }
     }
 
+    function copyClipboard(a){
+        if (window.isSecureContext) {
+            navigator.clipboard.writeText(a);
+            setDalert("Copied User ID to clipboard!");
+        }
+        else setDalert("Could not copy User ID to clipboard.");
+    }
+
     return (
         <div className={open ? "profile active" : "profile"}>
             <div className='profile-wrapper'>
+            {/* <Dialog open={dalert==""?false:true} onClose={()=>setDalert("")}>
+                {dalert}
+            </Dialog> */}
                 <div className='profile-topbar'>
                     <span className='heading'>Profile</span>
                     <div className='app-icon' onClick={() => setOpen(false)}>
@@ -102,7 +118,7 @@ export default function Profile({ open, setOpen }) {
                             </label>
                         </div>
                         <span className='note'>Image must show your face!</span>
-                        <form onSubmit={handleSubmit} className="profile-form">
+                        <form id='profileForm' onSubmit={handleSubmit} className="profile-form">
                             <input required value={fname} onChange={(e) => setFname(e.target.value)} type="text" placeholder="First Name" />
                             <input required value={lname} onChange={(e) => setLname(e.target.value)} type="text" placeholder="Last Name" />
                             <textarea value={desc} required onChange={(e) => setDesc(e.target.value)} typeof="text" placeholder="Write something about you." />
@@ -128,7 +144,7 @@ export default function Profile({ open, setOpen }) {
                         <span className='username'>{user?.username}</span>
                         <div className='description'>
                             {/* <div className='desc-label'>About:</div> */}
-                            <div className='user-desc'>{user?.desc}</div>
+                            <p className='user-desc'>{user?.desc}</p>
                             {/* {user?.desc} */}
                             
                             <div className='tags-wrapper'>
@@ -143,6 +159,7 @@ export default function Profile({ open, setOpen }) {
                         <button className='edit-btn' onClick={handleOnEdit}>
                             <i className="fa-solid fa-pen-to-square"></i>Profile
                         </button>
+                        <a className='user-id' title='Copy ID to Clipboard!' onClick={()=>copyClipboard(auth.id)}>User ID: {auth.id}</a>
                     </div>
                 )}
             </div>

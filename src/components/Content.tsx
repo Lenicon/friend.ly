@@ -336,6 +336,9 @@ export default function Content() {
                     <label htmlFor='upload-images'>
                         <div className='app-icon'>
                             <input
+                                placeholder='uploadimages'
+                                title='Upload images under 2MB.'
+                                aria-label='imgupload'
                                 type='file'
                                 accept='.jpg,.jpeg,.png,.gif'
                                 id='upload-images'

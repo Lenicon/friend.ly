@@ -177,7 +177,7 @@ export default function Register() {
     <div className='register'>
       <div className='wrapper'>
         <h2 className='heading'>Register</h2>
-        <form className='form'>
+        <form id='registerForm' className='form'>
           {error && <span className='error-msg'>{error}</span>}
 
 

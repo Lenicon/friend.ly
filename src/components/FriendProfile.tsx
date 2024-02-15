@@ -49,9 +49,9 @@ export default function FriendProfile({ open, setOpen }) {
                         <span className='realname'>{friend?.username}</span>
                         <p className='email'>{`[Identity Hidden...]`}</p>
                         <div className='description'>
-                            <div className='user-desc'>
+                            <p className='user-desc'>
                                 {friend?.desc}
-                            </div>
+                            </p>
                             
                             <div className='tags-wrapper'>
                                 {friend?.tags.map((tag, index) => (

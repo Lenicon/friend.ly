@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import {useContext} from "react";
 import { Context } from "./context/Context";
 import PasswordReset from "./pages/PasswordReset";
+import Home from "./pages/Home";
 
 
 function App() {
@@ -13,11 +14,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={auth? <Messenger/> : <Login/>} />
+        <Route path="/" element={auth? <Messenger/> : <Home/>} />
         <Route path="/login" element={auth? <Messenger/> : <Login/>} />
         <Route path="/register" element={auth? <Messenger/> : <Register/>} />
         <Route path="/passwordReset" element={auth? <Messenger/> : <PasswordReset/>} />
-        <Route path='*' element={<Navigate to="/" replace />} />
+        <Route path='*' element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   )

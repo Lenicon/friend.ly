@@ -2,7 +2,6 @@
     width: calc(100% - 350px);
     min-height: 100vh;
     background-color: var(--white);
-    scrollbar-width: 10px;
 }
 
 .content .wrapper {
@@ -26,10 +25,10 @@
 }
 
 .menu-icon{
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
     position: relative;
     color: var(--green);
 }
@@ -88,10 +87,10 @@
     outline: none;
     border: none;
     background-color: var(--bg-light);
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .content .wrapper .center{

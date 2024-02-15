@@ -6,15 +6,16 @@ interface Props {
   children: React.ReactNode;
   open: boolean;
   onClose: Function;
+  noBlock?: boolean;
 }
 
-export default function Dialog(props: Props) {
+export default function Dialog({noBlock=true, ...props}: Props) {
   const { open, onClose } = props;
   if (!open) {
     return <></>;
   }
   return (
-    <div className="dialog">
+    <div className="dialog" onClick={()=>noBlock?onClose():null}>
       <div className="wrapper">
         <div>{props.children}</div>
         <span className="span">

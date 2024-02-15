@@ -1,12 +1,13 @@
 .sidebar {
     width: 350px;
     min-height: 100vh;
-    background-color: var(--green);
+    /* background-color: var(--green); */
+    background: linear-gradient(var(--green), var(--subcolor));
     color: var(--white);
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .sidebar .wrapper {
@@ -137,10 +138,10 @@
 .chat-item {
     display: flex;
     gap: 1rem;
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 
 .chat-item-infos {

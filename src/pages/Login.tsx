@@ -58,7 +58,7 @@ export default function Login() {
     <div className='login'>
       <div className='wrapper'>
         <h2 className='heading'>Login</h2>
-        <form onSubmit={handleSubmit} className='form'>
+        <form id='loginForm' onSubmit={handleSubmit} className='form'>
           {error && <span className='error-msg'>{error}</span>}
           <input required ref={emailRef} pattern='^[0-9]+@usc\.edu\.ph' type='email' placeholder='USC Email'/>
           <input

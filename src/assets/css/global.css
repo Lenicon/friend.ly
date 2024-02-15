@@ -1,6 +1,8 @@
 :root {
     --green: #066418;
-    --subcolor: #658751;
+    --dark-green:#055113;
+    --subcolor: #86b46c;
+    --subcolor-light:#a2cc8a;
     --black: #333;
     --white: #fff;
     --bg-dark: rgba(0, 0, 0, 0.2);
@@ -10,25 +12,23 @@
     --box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
 }
 
+body {
+    background: linear-gradient(var(--green), var(--subcolor));
+}
 
-.register, .login, body {
-    --s: 80px; /* control the size */
-
-    --_c: var(--subcolor) calc(100% - var(--s)/2) 99%,#0000;
-    --_g: var(--s),#0000 calc(99% - var(--s)/2),var(--_c);
-    background:
-        radial-gradient(var(--s) at 100% var(--_g)),
-        radial-gradient(calc(var(--s)/4) at 50% calc(100%/3),var(--_c)) var(--s) 0,
-        radial-gradient(var(--s) at   0% var(--_g)) 0 calc(3*var(--s))
-        var(--green);
-    background-size: 
-        calc(2*var(--s)) calc(9*var(--s)/4),
-        calc(2*var(--s)) calc(3*var(--s)/4) !important;
+.register .heading, .login .heading, .passres .heading {
+    background: linear-gradient(var(--green), var(--subcolor));
+    -moz-background-clip: text;
+    -webkit-background-clip: text;
+    background-clip: text;
+    fill: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 .rotate {
     animation: rotation 1s infinite linear;
 }
+
 
 @keyframes rotation {
     from {transform: rotate(0deg);}
@@ -45,7 +45,7 @@
 
 * {
     -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    /* scrollbar-width: none; */
 }
 
 *::-webkit-scrollbar {
@@ -69,6 +69,8 @@ html {
     overflow-y: scroll !important;
     scroll-behavior: smooth !important;
 }
+
+
 
 body {
     min-height: 100vh;
