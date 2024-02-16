@@ -34,3 +34,6 @@ img
 
 # Read Me
 **/README.md
+
+.firebase/*
+.github/*

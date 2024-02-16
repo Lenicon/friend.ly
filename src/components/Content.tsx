@@ -38,9 +38,6 @@ export default function Content() {
 
     const scrollRef = useRef(null);
 
-    const [touchStart, setTouchStart] = useState(null)
-    const [touchEnd, setTouchEnd] = useState(null)
-
     const [revealed, setRevealed] = useState(false);
     const [uRevealed, setURevealed] = useState(false);
 
@@ -49,9 +46,6 @@ export default function Content() {
         loadUserRevealInfo();
     }, [currentChat?.revealed])
 
-    useEffect(()=>{
-        console.log(message);
-    }, [message])
     
     const loadFriendRevealInfo = () =>{
         if (currentChat?.revealed.includes(friend?.id)){
@@ -65,32 +59,12 @@ export default function Content() {
         }else return setURevealed(false);
     }
 
-    // the required distance between touchStart and touchEnd to be detected as a swipe
-    const minSwipeDistance = 50 
-
-    const onTouchStart = (e) => {
-        setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
-        setTouchStart(e.targetTouches[0].clientX)
-    }
-
-    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
-
-    const onTouchEnd = () => {
-        if (!touchStart || !touchEnd) return
-        const distance = touchStart - touchEnd
-        const isRightSwipe = distance < -minSwipeDistance
-        if (isRightSwipe) {
-            handleCloseChat()
-        }
-        // add your conditional logic here
-    }
-
     useEffect(()=>{
         return scrollRef.current?.scrollIntoView({behavior:"smooth"});
     }, [messages]);
 
     useEffect(()=>{
-        const loadMessages = async () => {
+        const loadMessages = () => {
             if (currentChat == null) return;
             try {
                 const query = getMsgQueryByConversationId(currentChat.id);
@@ -99,10 +73,10 @@ export default function Content() {
                     snapshots.forEach(snapshot=>{
                         tmpMessages.push(getSnapshotData(snapshot));
                     });
-                    setMessages(tmpMessages.sort((a,b)=>a.createdAt - b.createdAt));
+                    setMessages(tmpMessages.sort((a,b)=>a.createdAt-b.createdAt));
                 })
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         };
 
@@ -137,8 +111,6 @@ export default function Content() {
                         };
 
                         setImages((prev)=>[...prev, img])
-
-                        console.log(files[i].size)
                     },
                     error(err){
                         console.error(err);
@@ -186,7 +158,7 @@ export default function Content() {
                 setLoading(false)
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             setLoading(false)
         }
     }
@@ -200,7 +172,6 @@ export default function Content() {
                 fs += images[i].fileSize;
             }
             if(fs > 2000000) {
-                console.log(fs);
                 return setDalert("Total file size should not be more than 2MB.");
             }
         }
@@ -223,7 +194,7 @@ export default function Content() {
                 setLoading(false)
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             setLoading(false)
         }
     };
@@ -252,7 +223,7 @@ export default function Content() {
     }
 
     return (
-    <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={currentChat? "content active": "content"}>
+    <div className={currentChat? "content active": "content"}>
         <Dialog open={dalert!=""?true:false} onClose={()=>setDalert("")}>
             {dalert}
         </Dialog>

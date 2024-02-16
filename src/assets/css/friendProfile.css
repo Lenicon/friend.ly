@@ -6,23 +6,14 @@
     height: 100%;
     background-color: var(--white);
     color: var(--black);
-    transition: transform 0.5s, opacity 0.5s;
-    /* transform-origin: 100%; */
-    /* transform: scaleX(0); */
     right: 0;
-    transform: translateX(100%);
-    opacity: 0;
     z-index: 150;
+    display: none;
     border-left: var(--border);
-    /* overflow: hidden; */
 }
 
 .friendProfile.active {
     display: flex;
-    /* transform: scaleX(100%); */
-    opacity: 1;
-    /* right: 0; */
-    transform: translateX(0);
 }
 
 .friendProfile-wrapper{

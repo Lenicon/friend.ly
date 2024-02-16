@@ -123,7 +123,7 @@ export default function SideBar() {
             if (tagArrB.indexOf(tagArrA[i]) != -1)
                 tagVal++;
         }
-        console.log("algoVal ", tagVal- matchVal - matchVal - matchVal);
+        
         return tagVal - matchVal - matchVal - matchVal;
     }
 

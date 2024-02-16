@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import "../assets/css/profile.css";
 import Avatar from './Avatar';
 import { Context } from '../context/Context';
@@ -14,13 +14,8 @@ export default function Profile({ open, setOpen, setDalert }) {
     const [lname, setLname] = useState("");
     const [desc, setDesc] = useState("");
     const [tags, setTags] = useState([]);
-    // const [dalert, setDalert] = useState("");
 
     const [profileImage, setProfileImage] = useState(null);
-
-    // useEffect(()=>{
-    //     console.log(setDalert);
-    // }, [setDalert]);
 
     const handleOnEdit = () => {
         if (!user) return;
@@ -62,7 +57,7 @@ export default function Profile({ open, setOpen, setDalert }) {
             }
             setOnEdit(false);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

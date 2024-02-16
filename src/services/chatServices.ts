@@ -7,14 +7,13 @@ import {
     addDoc,
     arrayUnion, 
     updateDoc, 
-    deleteDoc, 
     doc, 
     setDoc,
     query,
     where,
     getDocs,
-    orderBy,
-    limit
+    limit,
+    orderBy
 } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
@@ -35,9 +34,7 @@ export const createUserAsync = async(creds)=>{
             isAdmin: false,
             createdAt: serverTimestamp()||null,
         }
-        await setDoc(doc(db, "users", creds.uid), user).then((res)=>{
-            console.log("response: ", res);
-        })
+        await setDoc(doc(db, "users", creds.uid), user)
         .catch((err)=>{
             console.error("Error: ", err);
         });
@@ -71,7 +68,7 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
         return getSnapshotData(snapshot);
     
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -127,7 +124,7 @@ export const getUsersAsync = async (user) => {
         const users = snapshots.docs.map((item)=> getSnapshotData(item));
         return users;
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -138,7 +135,7 @@ export const getUserAsync = async (id) => {
         const snapshot = await getDoc(userDoc);
         return getSnapshotData(snapshot);
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 
@@ -153,7 +150,7 @@ export const checkUserExistByEmail = async (email) => {
         else return true
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return false;
     }
     
@@ -178,7 +175,6 @@ export const createConversationAsync = async(userId, friendId)=>{
             const userDoc = doc(db, "users", friendId);
             const user_res = await getDoc(userDoc);
             const user_data = getSnapshotData(user_res);
-            console.log("bruh",user_data);
             
             const res_conv = await getDoc(convDoc);
             if(res_conv){
@@ -206,7 +202,7 @@ export const createConversationAsync = async(userId, friendId)=>{
         // return convo w contact infos
         return result;
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
@@ -256,17 +252,32 @@ export const createMessageAsync = async(message, images, convoId)=>{
             return msg;
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 
 export const getMsgQueryByConversationId = (convId)=>{
     return query(
         collection(db, `conversations/${convId}/messages`),
-        // where("conversationId", "==", convId),
+        orderBy('createdAt', 'desc'),
         limit(20)
     );
 }
+
+// export const getMsgQueryByConversationId = (convID) => {
+//     const q = query(collection(db, `conversations/${convID}/messages`), where("conversationId","==",convID), limit(20));
+
+//     onSnapshot(q, (querySnapshot)=>{
+//         const msgs = [];
+//         // querySnapshot.docChanges().forEach((change)=>{
+//         //     msgs.push(doc.data());
+//         // })
+//         // return msgs;
+//         querySnapshot.forEach((doc)=>{
+//             msgs.push(doc.data());
+//         })
+//     })
+// }
 
 export const getConversationsQueryByUser = (userId)=>{
     return query(

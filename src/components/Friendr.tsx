@@ -22,9 +22,5 @@ export default function Friendr(props:Props) {
         </div>
       </div>
     </div>
-    // <Dialog open={open} onClose={onClose}>
-    //   <div className='rotate'><i className='fa-solid fa-spinner'></i></div>
-    //   Finding Friend...
-    // </Dialog>
   )
 }

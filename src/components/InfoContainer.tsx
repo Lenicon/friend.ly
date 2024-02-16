@@ -5,8 +5,6 @@ export default function InfoContainer() {
     <div className='infos-wrapper'>
       <div className='infos'>
 
-        
-          {/* <img style={{width:'90px',height:'90px'}} src="https://i.imgur.com/vwTd48J.png"/> */}
           <i className='fa-solid fa-comments image' />
           <h2 className="text">FRIEND.ly</h2>
         

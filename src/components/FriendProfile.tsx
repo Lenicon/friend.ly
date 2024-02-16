@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import Avatar from './Avatar';
 import { Context } from '../context/Context';
 import "../assets/css/friendProfile.css";
-import { getConversationAsync, getUserAsync } from '../services/chatServices';
+import { getUserAsync } from '../services/chatServices';
 
 export default function FriendProfile({ open, setOpen }) {
     const { currentChat } = useContext(Context);
@@ -21,7 +21,6 @@ export default function FriendProfile({ open, setOpen }) {
 
     const loadFriendRevealInfo = async () =>{
         if (currentChat?.revealed.includes(friend?.id)){
-            console.log(friend);
             return setRevealed(true);
         }else return setRevealed(false);
     }

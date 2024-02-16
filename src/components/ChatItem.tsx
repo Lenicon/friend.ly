@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import Avatar from './Avatar';
 
 import {format} from 'timeago.js';
-import { getConversationAsync } from '../services/chatServices';
 
 export default function ChatItem({chat, active, selectConversation}) {
   

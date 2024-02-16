@@ -16,7 +16,6 @@ export default function PasswordReset() {
         try{
             setError("");
             await sendPasswordResetEmail(auth, email);
-            console.log("Password reset email sent!");
             await setDalert("Password reset link sent! It should arrive in your inbox within 5 minutes. If you haven't received it after checking both inbox and spam, you can request another link here.")
             await setLoading(false);
         } catch (error){
@@ -33,7 +32,6 @@ export default function PasswordReset() {
         const res = await checkUserExistByEmail(email)
 
         if (res) {
-            console.log(res);
             setLoading(true);
             await triggerResetEmail();
         } else {

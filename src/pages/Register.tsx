@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import '../assets/css/register.css'
 import { registerAsync } from '../services/authServices';
 import { zodiacUsernames, zodiacAvatarURLs } from '../config/randConfig';
@@ -27,7 +27,7 @@ export default function Register() {
   const [profileImage, setProfileImage] = useState(null);
   // const [profileImage2, setProfileImage2] = useState(null);
   const [tags, setTags] = useState([]);
-  const [matches, setMatches] =useState([]);
+  // const [matches, setMatches] =useState([]);
   const [tconfirm, setTconfirm] = useState(false);
   const [pconfirm, setPconfirm] = useState(false);
 
@@ -99,7 +99,7 @@ export default function Register() {
       password: password,
       desc: desc,
       tags: tags,
-      matches: matches,
+      matches: [],
     };
 
     try {
@@ -137,7 +137,6 @@ export default function Register() {
 
         if (error != "") setError("");
         setPage(gotoPage);
-        console.log(page);
 
         break;
 

@@ -11,8 +11,7 @@ interface Props {
 export default function IconButton(props: Props) {
     const {
         children,
-        onClick = (event: React.MouseEvent<HTMLButtonElement>) => {},
-        className = '',
+        onClick = (_event: React.MouseEvent<HTMLButtonElement>) => {},
         invisible = false,
     } = props;
 

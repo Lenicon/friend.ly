@@ -5,7 +5,6 @@ export default function TagsInput({ tags, setTags }) {
     const handleKeyDown = (e) => {
         if (e.code == "Comma" || e.code == "Enter") {
             e.preventDefault();
-            console.log(tags)
 
             if (tags.length == 10) return;
             const value = e.target.value;
@@ -24,7 +23,7 @@ export default function TagsInput({ tags, setTags }) {
     }
 
     const removeTag = (index) => {
-        setTags(tags.filter((e, i) => i != index));
+        setTags(tags.filter((_e, i) => i != index));
     }
 
     return (
