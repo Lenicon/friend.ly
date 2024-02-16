@@ -1,16 +1,13 @@
-import { useState } from 'react'
-
 import '../assets/css/navBar.css'
 
-export default function NavBar() {
-    const [active, setActive] = useState(false);
-
+export default function NavBar({active, setActive}) {
+    
     return (
         <>
             <header>
                 <nav className='nav'>
-                    <a href="#" className="logo">
-                        <img draggable={false} width={45} height={45} src='https://i.imgur.com/3RMVGzt.png' />
+                    <a href="/" className="logo">
+                        <img alt='logo' draggable={false} width={45} height={45} src='https://i.imgur.com/3RMVGzt.png' />
                         <span>Friend.ly</span>
                     </a>
                     <div>

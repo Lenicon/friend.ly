@@ -93,7 +93,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.8;
+  /* opacity: 0.8; */
   margin-bottom: .5em;
   z-index: 100;
 }
@@ -172,10 +172,17 @@
 
 .register .btnProceed{
   width: 100%;
+  transition: none !important;
 }
 
 .register .wrapper .form .btnProceed:hover {
-  opacity: 1;
+  /* opacity: 1; */
+  background: linear-gradient(var(--green), var(--subcolor));
+  -moz-background-clip: border-box;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  fill: var(--white);
+  -webkit-text-fill-color: var(--white);
 }
 
 .register .wrapper .form .btnBack {

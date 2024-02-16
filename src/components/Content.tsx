@@ -299,7 +299,7 @@ export default function Content() {
                         )}
                     </div>
                 </div>
-                <div className='center'>
+                <div className='center' onClick={()=>setOnFriendProfile(false)}>
                     { msgImages.length > 0 && onViewer ? (
                         <div className='image-viewer-wrapper'>
                             <ImageSlider
@@ -322,7 +322,7 @@ export default function Content() {
                         </div>
                     )}
                 </div>
-                <div className='bottom'>
+                <div className='bottom' onClick={()=>setOnFriendProfile(false)}>
                     {images.length > 0 && (
                         <div className="images-preview">
                             {images.map(image=>(

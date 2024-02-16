@@ -6,7 +6,7 @@ import ChatItem from './ChatItem';
 import Profile from './Profile';
 import { logoutAsync } from '../services/authServices';
 import { Context } from '../context/Context';
-import { signOut, updateMatches } from '../context/Actions';
+import { signOut } from '../context/Actions';
 import {
     createConversationAsync,
     getConversationAsync,
