@@ -58,19 +58,8 @@
 }
 
 .register .wrapper .form .select {
-  /* padding: 0.8rem 0.8rem; */
-  /* height: 3em !important; */
-  border-radius: 0.3rem;
-  font-size: 1rem;
-  border: var(--border) !important;
-  outline: none;
-  color: var(--black);
+  border: none !important;
   margin-bottom: 1rem;
-  resize: none;
-  scroll-behavior: smooth;
-  /* overflow-y: auto; */
-  display: inline-block;
-  width: 100%;
 }
 
 .register .wrapper .form .select:hover{

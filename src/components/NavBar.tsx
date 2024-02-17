@@ -1,33 +1,36 @@
 import '../assets/css/navBar.css'
 
-export default function NavBar({active, setActive}) {
-    
+export default function NavBar({ active, setActive }) {
+
     return (
         <>
-            <header>
-                <nav className='nav'>
-                    <a href="/" className="logo">
-                        <img alt='logo' draggable={false} width={45} height={45} src='https://i.imgur.com/3RMVGzt.png' />
-                        <span>Friend.ly</span>
-                    </a>
-                    <div>
-                        <ul id='navbar' className={active ? "#navbar active" : "#navbar"}>
-                            <li><a href="https://lenicon.gitbook.io/friend.ly/" target='_blank'>About</a></li>
-                            <li><a  target='_blank' href="https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform">Support</a></li>
-                            <li><a  target='_blank' href="https://lenicon.gitbook.io/friend.ly/help-and-tutorial">FAQ</a></li>
-                            <li><a  target='_blank' href="https://lenicon.gitbook.io/friend.ly/terms-and-conditions">Terms</a></li>
-                            <li><a  target='_blank' href="https://lenicon.gitbook.io/friend.ly/privacy-policy">Privacy</a></li>
-                        </ul>
-                    </div>
+            <nav className='topnav'>
+                {/* LOGO */}
+                <a className='logo' href='/'>
+                    <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+                    FRIEND.ly
+                </a>
 
-                    <div id="mobile" onClick={()=>setActive((prev) => !prev)}>
-                        <i
-                            id="bar"
-                            className={active ? "fa-solid fa-times" : "fa-solid fa-bars"}
-                        ></i>
-                    </div>
-                </nav>
-            </header>
+                {/* NAVIGATION LIST */}
+                <div className={active ? "navlist active" : "navlist"}>
+                    <a target='_blank' href="https://lenicon.gitbook.io/friend.ly/">About</a>
+
+                    <a target='_blank' href="https://docs.google.com/forms/d/e/1FAIpQLSdE7ip1J2syETXeVArVLzgobH5PdSnCKU6c-1qgbAbh49r8XQ/viewform">Support</a>
+
+                    <a target='_blank' href="https://lenicon.gitbook.io/friend.ly/help-and-tutorial">FAQ</a>
+
+                    <a target='_blank' href="https://lenicon.gitbook.io/friend.ly/terms-and-conditions">Terms</a>
+
+                    <a target='_blank' href="https://lenicon.gitbook.io/friend.ly/privacy-policy">Privacy</a>
+                </div>
+
+
+                {/* NAVIGATION ICON */}
+                <a className={active ? 'icon active' : 'icon'} onClick={() => setActive((prev) => !prev)}>
+                    <i className={active ? 'fa-solid fa-times' : 'fa-solid fa-bars'} />
+                </a>
+            </nav>
+
         </>
     )
 }

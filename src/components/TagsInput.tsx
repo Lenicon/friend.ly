@@ -3,7 +3,7 @@ import '../assets/css/tagsInput.css';
 export default function TagsInput({ tags, setTags }) {
 
     const handleKeyDown = (e) => {
-        if (e.code == "Comma" || e.code == "Enter") {
+        if (e.key == "," || e.key == "Enter") {
             e.preventDefault();
 
             if (tags.length == 10) return;
@@ -17,7 +17,7 @@ export default function TagsInput({ tags, setTags }) {
             e.target.value='';
         }
 
-        if (!e.target.value.trim() && e.code == "Backspace"){
+        if (!e.target.value.trim() && e.key == "Backspace"){
             removeTag(tags.length-1);
         }
     }

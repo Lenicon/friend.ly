@@ -50,8 +50,8 @@ export default function Register() {
     if (confirmpassword) setConfirmPassword("");
     if (fname) setEmail("");
     if (lname) setPassword("");
-    if (block) setEmail("");
-    if (desc) setPassword("");
+    if (block) setBlock("");
+    if (desc) setDesc("");
     if (tags) setTags([]);
   }
 
@@ -143,7 +143,7 @@ export default function Register() {
       case (2):
         if (gotoPage == 2) setPage(gotoPage);
         else {
-          if ((desc == "" || tags.length == 0) && gotoPage == 3)
+          if ((desc == "" || tags.length == 0))
           return setError("Please completely fill up the form.");
 
           if (error != "") setError("");
@@ -181,35 +181,57 @@ export default function Register() {
 
 
           {(page == 1) ? ( // Page 1
-            <div className='form'>
+            <div className='form' onSubmit={(e) => handlePage(2, e)}>
               <input required value={fname} onChange={(p) => setFname(p.target.value)} id='fname' type='text' placeholder='First Name' aria-label='firstname'/>
               <input required value={lname} onChange={(p) => setLname(p.target.value)} id='lname' type='text' placeholder='Last Name' aria-label='lastname' />
-              {/* <input required value={block} maxLength={3} pattern='^[STEM][0-9][0-9]' onChange={(p) => {p.target.value.toUpperCase(); setBlock(p.target.value);}} id='block' type='text' placeholder='Block' /> */}
-              {/* onFocus={()=>this.size=8} onBlur={()=>this.size=1} onChange={()=>{this.size=1; this.blur();}} */}
-
+              
               <Select
               placeholder='Select Block...'
               styles={{
-                // option: (defaultStyles, state) => ({
-                //   ...defaultStyles,
-                //   color: state.isSelected ? "#fff" : "#333",
-                //   backgroundColor: [state.isFocused ? "#066418":"#fff", state.isSelected ? "#066418":"#fff"],
-                //   '&:hover': state.isSelected ? '#066418':"#066418"
-                // }),
                 control: (defaultStyles) => ({
                   ...defaultStyles,
-                  border: 'none',
-                  borderColor: '#00000033',
+                  border: '2px solid #00000033',
+                  borderRadius: "0.3rem",
+                  fontSize: "1rem",
+                  verticalAlign: 'middle',
                   height:'3em',
-                  color: "#333"
+                  minHeight: "3em",
+                  color: "#333",
+                  display: "flex",
+                  alignItems: "center",
+                  outline: "none",
+                  width: "100%",
+                  scrollBehavior: "smooth",
+                  justifyContent: "center"
+
+                }),
+
+                valueContainer: (provided) => ({
+                  ...provided,
+                  height: '3em'
+                }),
+            
+                input: (provided) => ({
+                  ...provided,
+                  margin: '0px',
+                }),
+
+                option: (base, {isDisabled, isFocused, isSelected}) => ({
+                  ...base,
+                  backgroundColor: isSelected? "#066418" : isFocused ? "#a2cc8a":"white",
+                  color: isDisabled ? "gray" : isSelected? "white" : isFocused ? "#05513":"#333",
+
                 })
+
               }}
               className='select'
+              isSearchable={false}
               options={optionsBlock}
-              autoFocus={true}
-              onChange={(selected)=>
-                setBlock(selected.value)
-              }></Select>
+              defaultValue={block}
+              autoFocus={false}
+              onChange={(selected)=>setBlock(selected)}
+              
+              />
 
               <input aria-label='email' required value={email} onChange={(p) => setEmail(p.target.value)} pattern='^[0-9]+@usc\.edu\.ph' id="email" type='email' placeholder='USC Email' />
               <input aria-label='password' required value={password} onChange={(p) => setPassword(p.target.value)} id="password" type='password' placeholder='Password' minLength={8} />
@@ -224,7 +246,7 @@ export default function Register() {
           }
 
           {(page == 2) ? ( // Page 2
-            <div className='form'>
+            <div className='form' onSubmit={(e) => handlePage(3, e)}>
 
               <label className='input-label'>Description</label>
               <textarea required value={desc} onChange={(p) => setDesc(p.target.value)} id='desc' placeholder='Write about yourself.' maxLength={60} />
@@ -232,7 +254,7 @@ export default function Register() {
               <label className='input-label'>
                 Interests 
                 <span style={{ color: 'gray', fontWeight: 'normal', fontSize: '15px', marginLeft: '5px' }}>
-                  {`(tags left: ${10 - tags.length}; enter to add; backspace to remove)`}
+                  {`(tags left: ${10 - tags.length}; comma to add; backspace to remove)`}
                 </span>
               </label>
               <TagsInput tags={tags} setTags={setTags} />
@@ -250,7 +272,7 @@ export default function Register() {
           }
 
           {(page == 3) ? ( // Page 3
-            <div className='form'>
+            <div className='form' onSubmit={(e) => handlePage(4, e)}>
 
               <div className="avatar-wrapper">
 
@@ -296,7 +318,7 @@ export default function Register() {
           }
 
           {(page == 4) ? ( // Page 4
-            <div className='form'>
+            <div className='form' onSubmit={(e)=>handleSubmit(e)}>
 
               <label className='cbcontainer' htmlFor="termsncon">I have read and hereby accept the <a href={`${infolink}terms-and-conditions`}>Terms & Conditions</a>.
                 <input type='checkbox' onChange={()=>setTconfirm(!tconfirm)} id="termsncon" checked={tconfirm}></input>
