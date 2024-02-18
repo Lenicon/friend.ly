@@ -53,7 +53,7 @@ export default function Content() {
     const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
         const distance = touchStart - touchEnd
-        const isSwipe = distance < minSwipeDistance
+        const isSwipe = distance < -minSwipeDistance
         if (isSwipe && !onFriendProfile) handleCloseChat();
     }
 
