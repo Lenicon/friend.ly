@@ -43,22 +43,22 @@ export default function Content() {
     const [revealed, setRevealed] = useState(false);
     const [uRevealed, setURevealed] = useState(false);
 
-    const [kbActive, setKbActive] = useState(true);
-    const [currentKBA, setCurrentKBA] = useState(screen.height);
+    // const [kbActive, setKbActive] = useState(true);
+    // const [currentKBA, setCurrentKBA] = useState(screen.height);
 
-    const initialScreenSize = screen.height;
+    // const initialScreenSize = screen.height;
 
-    useEffect(()=>{
-        checkKB();
-        console.log(initialScreenSize, screen.height)
-    }, [screen.height])
+    // useEffect(()=>{
+    //     checkKB();
+    //     console.log(initialScreenSize, screen.height)
+    // }, [screen.height])
 
-    const checkKB = () => {
-        setCurrentKBA(screen.height);
-        if (initialScreenSize !== currentKBA) {
-            return setKbActive(true);
-        } else return setKbActive(false);
-    }
+    // const checkKB = () => {
+    //     setCurrentKBA(screen.height);
+    //     if (initialScreenSize !== currentKBA) {
+    //         return setKbActive(true);
+    //     } else return setKbActive(false);
+    // }
 
     useEffect(() => {
         loadFriendRevealInfo();
@@ -242,7 +242,7 @@ export default function Content() {
     }
 
     return (
-        <div className={`content${currentChat ? " active":""}${kbActive? " kbActive":""}`}>
+        <div className={`content${currentChat ? " active":""}`}>
             <Dialog open={dalert != "" ? true : false} onClose={() => setDalert("")}>
                 {dalert}
             </Dialog>
@@ -259,7 +259,7 @@ export default function Content() {
             </Confirm>
 
             {currentChat ? (
-                <div className='wrapper' style={kbActive?{position:"relative",bottom:`${initialScreenSize - currentKBA}px`}:{}}>
+                <div className='wrapper'>
                     <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile} />
                     <div className='top'>
                         <div className='activateFriendProfile' onClick={handleFriendProfile}>
@@ -312,11 +312,6 @@ export default function Content() {
                             </div>
                         )}
                     </div>
-                    {/* <KeyboardAwareScrollView
-                        style={{ backgroundColor: '#4c69a5' }}
-                        resetScrollToCoords={{ x: 0, y: 0 }}
-                        scrollEnabled={false}
-                    > */}
                     <div className='bottom' onClick={() => setOnFriendProfile(false)}>
                         {images.length > 0 && (
                             <div className="images-preview">
@@ -356,15 +351,15 @@ export default function Content() {
                             }}
                             placeholder='Write a message'
                         />
-                        <button className='app-icon' disabled={loading} onClick={handleCreateMessage}>
+                        <button role='send' className='app-icon' disabled={loading} onClick={handleCreateMessage}>
                             {loading ?
                                 <i className='fa-solid fa-spinner rotate'></i>
                                 :
                                 <i className='fa-solid fa-paper-plane'></i>
                             }
                         </button>
+                        <span className='peekaboo'>peekaboo thnx 4 research ✪ ω ✪</span>
                     </div>
-                    {/* </KeyboardAwareScrollView> */}
                 </div>
             ) : (
                 <InfoContainer />

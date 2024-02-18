@@ -18,7 +18,7 @@ export default function Avatar({id, username, src, height, width}: avatar) {
     <div className='d-flex-row'>
 
       <div className='avatar-img'>
-        <img
+        <img draggable={false}
           src={src? src : defAvatar}
           alt="" style={{
             height: `${height}px`,
