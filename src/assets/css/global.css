@@ -19,6 +19,10 @@ body {
     overflow: hidden;
 }
 
+.app {
+    position: relative;
+}
+
 .register .heading, .login .heading, .passres .heading {
     background: linear-gradient(var(--green), var(--subcolor));
     -moz-background-clip: text;

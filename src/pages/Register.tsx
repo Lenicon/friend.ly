@@ -197,12 +197,12 @@ export default function Register() {
                   height:'3em',
                   minHeight: "3em",
                   color: "#333",
-                  display: "flex",
                   alignItems: "center",
                   outline: "none",
                   width: "100%",
                   scrollBehavior: "smooth",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  zIndex: "100",
 
                 }),
 

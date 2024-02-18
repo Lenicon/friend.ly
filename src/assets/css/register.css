@@ -60,10 +60,8 @@
 .register .wrapper .form .select {
   border: none !important;
   margin-bottom: 1rem;
-}
-
-.register .wrapper .form .select:hover{
-  border-color: #00000033;
+  width: 100%;
+  display: flex;
 }
 
 
@@ -207,12 +205,14 @@
 }
 
 .register .wrapper .form #fname {
+  pointer-events: all;
   display: block !important;
   /* justify-content: space-between !important; */
   width: 48.5%;
   float: left !important;
 }
 .register .wrapper .form #lname {
+  pointer-events: all;
   display: block !important;
   /* justify-content: space-between !important; */
   width: 48.5%;
@@ -229,9 +229,6 @@
   width: 100%;
 }
 
-/* .register .wrapper .form {
-  clear: both;
-} */
 
 hr {
   border-radius: 5px;
