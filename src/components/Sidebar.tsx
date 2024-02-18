@@ -44,8 +44,12 @@ export default function SideBar() {
     const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
         const distance = touchStart - touchEnd
-        const isLeftSwipe = distance > minSwipeDistance
-        if (isLeftSwipe) handleSelectConversation(JSON.parse(localStorage.getItem("prevConv")));
+        const isLSwipe = distance > minSwipeDistance;
+        const isRSwipe = distance <- minSwipeDistance;
+        if (isLSwipe && !onProfile){
+            return handleSelectConversation(JSON.parse(localStorage.getItem("prevConv")));
+        }
+        if (isRSwipe && !onProfile) return setOnProfile(true);
     }
 
     useEffect(()=>{
@@ -223,6 +227,7 @@ export default function SideBar() {
 
 
     const handleSelectConversation = (conv) => {  
+        setOnProfile(false);
         dispatch({type:"SET_CURRENT_CHAT", payload: conv});
         localStorage.setItem("convId", JSON.stringify(conv.id));
         localStorage.setItem("prevConv", JSON.stringify(conv));

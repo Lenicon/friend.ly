@@ -17,6 +17,27 @@ export default function Profile({ open, setOpen, setDalert }) {
 
     const [profileImage, setProfileImage] = useState(null);
 
+
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistance = 50 
+    const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX)
+    }
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+    const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+        const distance = touchStart - touchEnd;
+        const isLSwipe = distance > minSwipeDistance;
+        
+        if (isLSwipe && open && !onEdit) {
+            return setOpen(false);
+        }
+    }
+
+
     const handleOnEdit = () => {
         if (!user) return;
         setFname(user.fname);
@@ -70,7 +91,7 @@ export default function Profile({ open, setOpen, setDalert }) {
     }
 
     return (
-        <div className={open ? "profile active" : "profile"}>
+        <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={open ? "profile active" : "profile"}>
             <div className='profile-wrapper'>
             {/* <Dialog open={dalert==""?false:true} onClose={()=>setDalert("")}>
                 {dalert}

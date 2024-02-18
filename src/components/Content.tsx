@@ -52,9 +52,15 @@ export default function Content() {
     const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
     const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return
-        const distance = touchStart - touchEnd
-        const isSwipe = distance < -minSwipeDistance
-        if (isSwipe && !onFriendProfile && !onViewer) handleCloseChat();
+        const distance = touchStart - touchEnd;
+        const isRSwipe = distance < -minSwipeDistance;
+        const isLSwipe = distance > minSwipeDistance;
+        
+        if (isRSwipe && !onViewer) {
+            if (onFriendProfile) return setOnFriendProfile(false);
+            return handleCloseChat();
+        }
+        if (isLSwipe && !onFriendProfile && !onViewer) return setOnFriendProfile(true);
     }
 
 
@@ -212,6 +218,8 @@ export default function Content() {
     };
 
     const handleCloseChat = () => {
+        setOnFriendProfile(false);
+        setOnViewer(false);
         dispatch({ type: "SET_CURRENT_CHAT", payload: null });
         localStorage.setItem("convId", null);
     }
