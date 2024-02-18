@@ -202,11 +202,9 @@
     }
 }
 
-.content .peekaboo {
-    display: none;
-    z-index: 5000 !important;
-    color: var(--green);
-    word-wrap: break-word;
+.content .top {
+    z-index: 1000;
+    background-color: var(--white);
 }
 
 @media (max-width: 580px) {
@@ -230,11 +228,9 @@
         bottom: 70px;
     }
 
-    .content .peekaboo {
-        display: block;
-        position: absolute;
-        bottom: -45px;
-        left: 50%;
-        transform: translateX(-50%);
+    .content .wrapper .center {
+        position: relative;
+        padding-bottom: 60px;
+        margin-top: 0px;
     }
 }

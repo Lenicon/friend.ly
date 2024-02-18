@@ -38,6 +38,26 @@ export default function Content() {
     const [cdRev, setCDRev] = useState(false);
     const [dalert, setDalert] = useState("");
 
+
+    // TOUCH SWIPING
+
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+    // the required distance between touchStart and touchEnd to be detected as a swipe
+    const minSwipeDistance = 50 
+    const onTouchStart = (e) => {
+    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX)
+    }
+    const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
+    const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+        const distance = touchStart - touchEnd
+        const isSwipe = distance < minSwipeDistance
+        if (isSwipe && !onFriendProfile) handleCloseChat();
+    }
+
+
     const scrollRef = useRef(null);
 
     const [revealed, setRevealed] = useState(false);
@@ -119,16 +139,6 @@ export default function Content() {
                     }
                 });
 
-                // const id = getID();
-                // const img = {
-                //     id,
-                //     origin: files[i].name,
-                //     filename: id+"-"+files[i].name,
-                //     file: files[i],
-                //     fileSize: files[i].size
-                // };
-
-                // setImages((prev)=>[...prev, img])
             }
         }
     };
@@ -225,7 +235,7 @@ export default function Content() {
     }
 
     return (
-        <div className={`content${currentChat ? " active":""}`}>
+        <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={`content${currentChat ? " active":""}`}>
             <Dialog open={dalert != "" ? true : false} onClose={() => setDalert("")}>
                 {dalert}
             </Dialog>
@@ -334,14 +344,14 @@ export default function Content() {
                             }}
                             placeholder='Write a message'
                         />
-                        <button role='send' className='app-icon' disabled={loading} onClick={handleCreateMessage}>
+                        <button className='app-icon' disabled={loading} onClick={handleCreateMessage}>
                             {loading ?
                                 <i className='fa-solid fa-spinner rotate'></i>
                                 :
                                 <i className='fa-solid fa-paper-plane'></i>
                             }
                         </button>
-                        <span className='peekaboo'>peekaboo thnx 4 research ✪ ω ✪</span>
+                        
                     </div>
                 </div>
             ) : (
