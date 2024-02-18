@@ -72,26 +72,6 @@ export const updateUserAsync = async(updatedUser, profileImage) => {
     }
 }
 
-// export const updateProfileAsync = async(updatedUser, profileImage) => {
-//     try {
-//         const tempUser = {profile:null};
-//         const creds = auth.currentUser;
-//         const userDoc = doc(db, "users", creds.uid);
-
-//         if (profileImage){
-//             const location = `images/users/${creds.uid}/profile/`;
-//             await deleteAllFiles(location);
-//             const urls = await uploadFiles([profileImage], location);
-//             if (urls.length > 0) {
-//                 tempUser.profile = urls[0];
-
-//             }
-//         }
-//     }catch (error){
-//         console.error(error);
-//     }
-// }
-
 export const updateMatchesAsync = async(id, convoID) => {
     try {
         let userDoc = doc(db, "users", id)
@@ -264,28 +244,15 @@ export const getMsgQueryByConversationId = (convId)=>{
     );
 }
 
-// export const getMsgQueryByConversationId = (convID) => {
-//     const q = query(collection(db, `conversations/${convID}/messages`), where("conversationId","==",convID), limit(20));
-
-//     onSnapshot(q, (querySnapshot)=>{
-//         const msgs = [];
-//         // querySnapshot.docChanges().forEach((change)=>{
-//         //     msgs.push(doc.data());
-//         // })
-//         // return msgs;
-//         querySnapshot.forEach((doc)=>{
-//             msgs.push(doc.data());
-//         })
-//     })
-// }
-
 export const getConversationsQueryByUser = (userId)=>{
     return query(
         collection(db, "conversations"),
+        orderBy("last.createdAt", "desc"),
         where("members", "array-contains", userId),
         limit(10)
     );
 }
+
 
 // helper functions
 

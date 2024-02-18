@@ -242,6 +242,15 @@ export default function Content() {
         return setCDRev(false);
     }
 
+    const handleScrollCheck = (e) => {
+        const bottom = Math.abs(e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight)) <= 1;
+        const top = Math.abs(e.target.scrollTop) <= 1;
+
+        if (bottom) console.log("bottom");
+        if (top) console.log("top");
+    }
+    
+
     return (
         <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={`content${currentChat ? " active":""}`}>
             <Dialog open={dalert != "" ? true : false} onClose={() => setDalert("")}>
@@ -299,7 +308,7 @@ export default function Content() {
                                 />
                             </div>
                         ) : (
-                            <div className='messages-wrapper'>
+                            <div className='messages-wrapper' onScroll={(e)=>handleScrollCheck(e)}>
                                 {messages.map((msg, index) => (
                                     <Message
                                         key={msg?.id}
