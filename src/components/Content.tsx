@@ -43,23 +43,6 @@ export default function Content() {
     const [revealed, setRevealed] = useState(false);
     const [uRevealed, setURevealed] = useState(false);
 
-    // const [kbActive, setKbActive] = useState(true);
-    // const [currentKBA, setCurrentKBA] = useState(screen.height);
-
-    // const initialScreenSize = screen.height;
-
-    // useEffect(()=>{
-    //     checkKB();
-    //     console.log(initialScreenSize, screen.height)
-    // }, [screen.height])
-
-    // const checkKB = () => {
-    //     setCurrentKBA(screen.height);
-    //     if (initialScreenSize !== currentKBA) {
-    //         return setKbActive(true);
-    //     } else return setKbActive(false);
-    // }
-
     useEffect(() => {
         loadFriendRevealInfo();
         loadUserRevealInfo();
