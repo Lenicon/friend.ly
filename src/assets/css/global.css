@@ -12,6 +12,31 @@
     --box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.5);
 }
 
+.register .logo, .login .logo, .passres .logo {
+    font-size: 30px;
+    color: var(--white);
+    display: flex;
+    position:sticky;
+    /* top: 50px; */
+    margin-bottom: 13px;
+    align-items: center;
+    gap: 5px;
+    font-weight: 800;
+}
+
+.register .logo:hover, .login .logo:hover, .passres .logo:hover {
+    color: var(--subcolor-light);
+
+    :is(img) {
+        opacity: 0.8;
+    }
+}
+
+.logo img {
+    border: 1px solid rgba(255, 255, 255, 1);
+    border-radius: 100%;
+}
+
 body {
     background: linear-gradient(var(--green), var(--subcolor));
     width: 100vw;

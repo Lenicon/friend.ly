@@ -6,12 +6,6 @@
   }
 }
 
-
-.topnav .logo img {
-  border: 1px solid rgba(255, 255, 255, 1);
-  border-radius: 100%;
-}
-
 .topnav .navlist a:hover {
   color: var(--subcolor-light);
   border-bottom: 3px solid var(--subcolor-light);

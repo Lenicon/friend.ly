@@ -6,7 +6,7 @@ import ImageSlider from './ImageSlider';
 import InfoContainer from './InfoContainer';
 import { Context } from '../context/Context';
 import { v4 as getID } from 'uuid';
-import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
+import { createMessageAsync, getMsgQueryByConversationId, getOldMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
 import Compressor from 'compressorjs';
@@ -92,24 +92,41 @@ export default function Content() {
     }, [messages]);
 
     useEffect(() => {
-        const loadMessages = () => {
-            if (currentChat == null) return;
-            try {
-                const query = getMsgQueryByConversationId(currentChat.id);
-                onSnapshot(query, snapshots => {
-                    let tmpMessages = [];
-                    snapshots.forEach(snapshot => {
-                        tmpMessages.push(getSnapshotData(snapshot));
-                    });
-                    setMessages(tmpMessages.sort((a, b) => a.createdAt - b.createdAt));
-                })
-            } catch (error) {
-                console.error(error)
-            }
-        };
 
         loadMessages();
     }, [currentChat]);
+
+    const loadMessages = () => {
+        if (currentChat == null) return;
+        try {
+            const query = getMsgQueryByConversationId(currentChat.id);
+            onSnapshot(query, snapshots => {
+                let tmpMessages = [];
+                snapshots.forEach(snapshot => {
+                    tmpMessages.push(getSnapshotData(snapshot));
+                });
+                setMessages(tmpMessages.sort((a, b) => a.createdAt - b.createdAt));
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    };
+
+    const handleScrollCheck = (e) => {
+        const top = Math.abs(e.target.scrollTop) < 0.5;
+        
+        if (top && messages.length>0) {
+            const query = getOldMsgQueryByConversationId(currentChat.id, messages.length-1);
+            onSnapshot(query, snapshots => {
+                let tmpmsg = [];
+                snapshots.forEach(snapshot => {
+                    if (messages.includes(getSnapshotData(snapshot))) return;
+                    else tmpmsg.push(getSnapshotData(snapshot));
+                });
+                setMessages((m)=>[...m, tmpmsg.sort((a,b)=>a.createdAt-b.createdAt)]);
+            })
+        };
+    }
 
     const openImageViewer = (images) => {
         setMsgImages(images);
@@ -240,14 +257,6 @@ export default function Content() {
         } else return setDalert("You have already revealed yourself to this person.")
 
         return setCDRev(false);
-    }
-
-    const handleScrollCheck = (e) => {
-        const bottom = Math.abs(e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight)) <= 1;
-        const top = Math.abs(e.target.scrollTop) <= 1;
-
-        if (bottom) console.log("bottom");
-        if (top) console.log("top");
     }
     
 

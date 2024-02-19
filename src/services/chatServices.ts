@@ -13,7 +13,8 @@ import {
     where,
     getDocs,
     limit,
-    orderBy
+    orderBy,
+    startAfter
 } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 
@@ -242,6 +243,15 @@ export const getMsgQueryByConversationId = (convId)=>{
         orderBy('createdAt', 'desc'),
         limit(20)
     );
+}
+
+export const getOldMsgQueryByConversationId = (convId, lastmsg) => {
+    return query(
+        collection(db, `conversations/${convId}/messages`),
+        orderBy('createdAt', 'desc'),
+        startAfter(lastmsg),
+        limit(10)
+    )
 }
 
 export const getConversationsQueryByUser = (userId)=>{

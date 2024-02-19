@@ -17,7 +17,7 @@ export default function Login() {
     if (emailRef?.current) {
       emailRef.current.value = "";
     }
-    if (passRef?.current){
+    if (passRef?.current) {
       passRef.current.value = "";
     }
   };
@@ -35,10 +35,10 @@ export default function Login() {
 
     try {
       const res = await loginAsync(creds);
-      if(res?.user){
+      if (res?.user) {
         const currentUser = await getUserAsync(res.user.uid);
-        if (currentUser){
-          dispatch(signIn({ auth: res.user, user: currentUser}));
+        if (currentUser) {
+          dispatch(signIn({ auth: res.user, user: currentUser }));
           clearInputs();
           setLoading(false);
         }
@@ -49,14 +49,20 @@ export default function Login() {
       setLoading(false);
     }
   }
-  
+
   return (
     <div className='login'>
+
+      <a className='logo' href='/'>
+        <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+        FRIEND.ly
+      </a>
+
       <div className='wrapper'>
         <h2 className='heading'>Login</h2>
         <form id='loginForm' onSubmit={handleSubmit} className='form'>
           {error && <span className='error-msg'>{error}</span>}
-          <input required ref={emailRef} pattern='^[0-9]+@usc\.edu\.ph' type='email' placeholder='USC Email'/>
+          <input required ref={emailRef} pattern='^[0-9]+@usc\.edu\.ph' type='email' placeholder='USC Email' />
           <input
             required
             ref={passRef}
@@ -70,11 +76,10 @@ export default function Login() {
             <a href='/register'>No account? Register here.</a>
           </span>
           <span className="link">
-              <a href='/passwordReset'>Forgot your password? Click here.</a>
+            <a href='/passwordReset'>Forgot your password? Click here.</a>
           </span>
         </form>
       </div>
     </div>
   )
 }
-    

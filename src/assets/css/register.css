@@ -1,13 +1,15 @@
 .register {
   width: 100%;
-  height:100lvh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  flex-direction: column;
+  vertical-align: middle;
 }
 
 .register .wrapper {
@@ -42,7 +44,8 @@
   padding: 0.5rem 0;
 }
 
-.register .wrapper .form input, .register .wrapper .form textarea{
+.register .wrapper .form input,
+.register .wrapper .form textarea {
   padding: 0.8rem 0.8rem;
   border-radius: 0.3rem;
   font-size: 1rem;
@@ -66,7 +69,8 @@
 
 
 
-.register .wrapper .form input::placeholder, .register .wrapper .form textarea::placeholder,
+.register .wrapper .form input::placeholder,
+.register .wrapper .form textarea::placeholder,
 .register .wrapper .form select #selectnone {
   color: gray;
 }
@@ -157,7 +161,7 @@
   text-decoration: underline;
 }
 
-.register .btnProceed{
+.register .btnProceed {
   width: 100%;
   transition: none !important;
 }
@@ -211,6 +215,7 @@
   width: 48.5%;
   float: left !important;
 }
+
 .register .wrapper .form #lname {
   pointer-events: all;
   display: block !important;
@@ -238,7 +243,7 @@ hr {
   border-right: 0;
   border-left: 0;
   margin-bottom: 1rem;
-  
+
 }
 
 @media (max-width: 580px) {
@@ -246,4 +251,3 @@ hr {
     width: 90%;
   }
 }
-

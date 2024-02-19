@@ -139,10 +139,6 @@ export default function SideBar() {
         return maxIndex;
     }
 
-    // const checkMatch = async () => {
-        
-    // }
-
     const handleCreateFriend = async () => {
         try {
             if (auth == null || auth == undefined) return setNewChat(false);
@@ -235,6 +231,7 @@ export default function SideBar() {
 
 
     const handleLogout =async () => {
+        await localStorage.setItem("prevConv", null);
         await logoutAsync();
         dispatch(signOut());
     };
