@@ -19,7 +19,7 @@ function App() {
           <Route path="/login" element={auth ? <Messenger /> : <Login />} />
           <Route path="/register" element={auth ? <Messenger /> : <Register />} />
           <Route path="/passwordReset" element={auth ? <Messenger /> : <PasswordReset />} />
-          <Route path='*' element={<Navigate to="/login" replace />} />
+          <Route path='*' element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

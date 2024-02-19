@@ -2,6 +2,7 @@
     width: calc(100% - 350px);
     min-height: 100vh;
     background-color: var(--white);
+    position: relative;
 }
 
 .content .wrapper {
@@ -24,7 +25,7 @@
     cursor: pointer !important;
 }
 
-.menu-icon{
+.menu-icon {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -45,6 +46,44 @@
     box-shadow: var(--box-shadow);
     overflow: hidden;
     z-index: 50;
+}
+
+.content .dropFile {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-dark);
+    z-index: 5000;
+}
+
+.content .dropFile span {
+    position: relative;
+    display: flex;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 64px;
+    word-wrap: normal;
+
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    
+    margin: auto;
+    font-weight: 800;
+    color: var(--black);
+
+}
+
+.content .dropFile input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: auto;
+    z-index: 5000;
+    opacity: 0;
+    /* border: 2px blue solid; */
 }
 
 .menu-item {
@@ -80,7 +119,7 @@
     color: var(--green);
 }
 
-.content .wrapper .bottom textarea{
+.content .wrapper .bottom textarea {
     resize: none;
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -96,23 +135,24 @@
     user-select: none;
 }
 
-.content .wrapper .center{
+.content .wrapper .center {
     height: calc(100vh - 140px);
     display: flex;
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.image-viewer-wrapper{
+.image-viewer-wrapper {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.8);
+    z-index: 5000;
 }
 
-.content .wrapper .center .messages-wrapper{
+.content .wrapper .center .messages-wrapper {
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -197,7 +237,7 @@
 }
 
 @media (max-width: 820px) {
-    .content{
+    .content {
         width: calc(100% - 300px);
     }
 }
@@ -208,7 +248,7 @@
 }
 
 @media (max-width: 580px) {
-    .content{
+    .content {
         width: 100%;
         height: 100%;
         position: fixed;

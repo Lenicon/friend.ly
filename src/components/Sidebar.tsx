@@ -47,7 +47,8 @@ export default function SideBar() {
         const isLSwipe = distance > minSwipeDistance;
         const isRSwipe = distance <- minSwipeDistance;
         if (isLSwipe && !onProfile){
-            return handleSelectConversation(JSON.parse(localStorage.getItem("prevConv")));
+            if (localStorage.getItem("prevConv") == null) return;
+            else return handleSelectConversation(JSON.parse(localStorage.getItem("prevConv")));
         }
         if (isRSwipe && !onProfile) return setOnProfile(true);
     }
@@ -223,6 +224,7 @@ export default function SideBar() {
 
 
     const handleSelectConversation = (conv) => {  
+        if (conv == null) return;
         setOnProfile(false);
         dispatch({type:"SET_CURRENT_CHAT", payload: conv});
         localStorage.setItem("convId", JSON.stringify(conv.id));

@@ -5,6 +5,8 @@ import { getUserAsync } from "../services/chatServices";
 import { Context } from '../context/Context';
 import { signIn } from '../context/Actions';
 
+import logoimg from '/logo.png';
+
 export default function Login() {
   const { dispatch } = useContext(Context);
   const emailRef = useRef(null);
@@ -54,7 +56,7 @@ export default function Login() {
     <div className='login'>
 
       <a className='logo' href='/'>
-        <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+        <img alt="logo" draggable={false} src={logoimg} width={30} height={30} />
         FRIEND.ly
       </a>
 

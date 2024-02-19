@@ -1,5 +1,7 @@
 import '../assets/css/navBar.css'
 
+import logoimg from '/logo.png';
+
 export default function NavBar({ active, setActive }) {
 
     return (
@@ -7,7 +9,7 @@ export default function NavBar({ active, setActive }) {
             <nav className='topnav'>
                 {/* LOGO */}
                 <a className='logo' href='/'>
-                    <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+                    <img alt="logo" draggable={false} src={logoimg} width={30} height={30} />
                     FRIEND.ly
                 </a>
 

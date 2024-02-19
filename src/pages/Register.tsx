@@ -8,6 +8,8 @@ import { v4 as getID } from "uuid";
 import TagsInput from '../components/TagsInput';
 import Select from 'react-select';
 
+import logoimg from '/logo.png';
+
 
 export default function Register() {
   // const emailRef = useRef(null);
@@ -62,13 +64,8 @@ export default function Register() {
       filename: getID() + "-" + file.name,
       file
     };
-    // const Image2 = {
-    //   origin: file.name,
-    //   filename: getID() + "-" + file.name,
-    //   url: URL.createObjectURL(file)
-    // };
+
     setProfileImage(Image);
-    // setProfileImage2(Image2);
   };
 
   const handleSubmit = async (e) => {
@@ -176,10 +173,10 @@ export default function Register() {
     <div className='register'>
 
       <a className='logo' href='/'>
-        <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+        <img alt="logo" draggable={false} src={logoimg} width={30} height={30} />
         FRIEND.ly
       </a>
-      
+
       <div className='wrapper'>
 
         <h2 className='heading'>Register</h2>

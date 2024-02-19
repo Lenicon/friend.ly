@@ -4,6 +4,8 @@ import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import Dialog from '../components/Dialog';
 import { checkUserExistByEmail } from '../services/chatServices';
 
+import logoimg from '/logo.png';
+
 export default function PasswordReset() {
     const [error, setError] = useState("");
     const [dalert, setDalert] = useState("");
@@ -46,7 +48,7 @@ export default function PasswordReset() {
         <div className='passres'>
 
             <a className='logo' href='/'>
-                <img alt="logo" draggable={false} src='https://i.imgur.com/3RMVGzt.png' width={30} height={30} />
+                <img alt="logo" draggable={false} src={logoimg} width={30} height={30} />
                 FRIEND.ly
             </a>
 

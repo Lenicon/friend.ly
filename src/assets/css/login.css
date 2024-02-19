@@ -1,4 +1,6 @@
 .login {
+  background: linear-gradient(var(--green-transparent), var(--subcolor-transparent)), url('/backgroundimg.jpg') repeat center !important;
+  background-size: cover;
   width: 100%;
   height: 100vh;
   display: flex;

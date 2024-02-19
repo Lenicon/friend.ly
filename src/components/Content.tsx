@@ -6,19 +6,13 @@ import ImageSlider from './ImageSlider';
 import InfoContainer from './InfoContainer';
 import { Context } from '../context/Context';
 import { v4 as getID } from 'uuid';
-import { createMessageAsync, getMsgQueryByConversationId, getOldMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
+import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
 import Compressor from 'compressorjs';
 import Dialog from './Dialog';
 import Confirm from './ConfirmDialog';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-
-// type Props={
-//     chat: boolean,
-//     setChat: (chat: boolean)=>void
-// }
 
 export default function Content() {
     const { currentChat, auth, dispatch } = useContext(Context)
@@ -38,24 +32,25 @@ export default function Content() {
     const [cdRev, setCDRev] = useState(false);
     const [dalert, setDalert] = useState("");
 
+    const [dragActive, setDragActive] = useState(false);
 
     // TOUCH SWIPING
 
     const [touchStart, setTouchStart] = useState(null)
     const [touchEnd, setTouchEnd] = useState(null)
     // the required distance between touchStart and touchEnd to be detected as a swipe
-    const minSwipeDistance = 50 
+    const minSwipeDistance = 50
     const onTouchStart = (e) => {
-    setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
-    setTouchStart(e.targetTouches[0].clientX)
+        setTouchEnd(null) // otherwise the swipe is fired even with usual touch events
+        setTouchStart(e.targetTouches[0].clientX)
     }
     const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX)
     const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
+        if (!touchStart || !touchEnd) return
         const distance = touchStart - touchEnd;
         const isRSwipe = distance < -minSwipeDistance;
         const isLSwipe = distance > minSwipeDistance;
-        
+
         if (isRSwipe && !onViewer) {
             if (onFriendProfile) return setOnFriendProfile(false);
             return handleCloseChat();
@@ -112,21 +107,21 @@ export default function Content() {
         }
     };
 
-    const handleScrollCheck = (e) => {
-        const top = Math.abs(e.target.scrollTop) < 0.5;
-        
-        if (top && messages.length>0) {
-            const query = getOldMsgQueryByConversationId(currentChat.id, messages.length-1);
-            onSnapshot(query, snapshots => {
-                let tmpmsg = [];
-                snapshots.forEach(snapshot => {
-                    if (messages.includes(getSnapshotData(snapshot))) return;
-                    else tmpmsg.push(getSnapshotData(snapshot));
-                });
-                setMessages((m)=>[...m, tmpmsg.sort((a,b)=>a.createdAt-b.createdAt)]);
-            })
-        };
-    }
+    // const handleScrollCheck = (e) => {
+    //     const top = Math.abs(e.target.scrollTop) < 0.5;
+
+    //     if (top && messages.length>0) {
+    //         const query = getOldMsgQueryByConversationId(currentChat.id, messages.length-1);
+    //         onSnapshot(query, snapshots => {
+    //             let tmpmsg = [];
+    //             snapshots.forEach(snapshot => {
+    //                 if (messages.includes(getSnapshotData(snapshot))) return;
+    //                 else tmpmsg.push(getSnapshotData(snapshot));
+    //             });
+    //             setMessages((m)=>[...m, tmpmsg.sort((a,b)=>a.createdAt-b.createdAt)]);
+    //         })
+    //     };
+    // }
 
     const openImageViewer = (images) => {
         setMsgImages(images);
@@ -138,8 +133,25 @@ export default function Content() {
         setOnViewer(false);
     };
 
-    const handleImages = async (e) => {
-        const files = [...e.target.files];
+    const handleImages = async (e, t = 0) => {
+        let files;
+
+        switch (t) {
+            case 0:
+                files = [...e.target.files];
+                break;
+            case 1:
+                files = [...e.clipboardData.files];
+                break;
+            case 2:
+                e.preventDefault();
+                files = [...e.dataTransfer.files];
+                break;
+            default:
+                files = [...e.target.files];
+                break;
+        }
+
         if (files) {
             for (let i = 0; i < files.length; i++) {
                 new Compressor(files[i], {
@@ -258,13 +270,45 @@ export default function Content() {
 
         return setCDRev(false);
     }
-    
+
 
     return (
-        <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} className={`content${currentChat ? " active":""}`}>
+        <div
+            onDropCapture={async(e) => {handleImages(e, 2); await setDragActive(false)}}
+            onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(true); }}
+            onDragLeave={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const { relatedTarget } = e;
+                if (!relatedTarget) {
+                    setDragActive(false);
+                }
+            }}
+            // onDragEnd={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
+            // onDragExit={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
+
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            className={`content${currentChat ? " active" : ""}`}>
             <Dialog open={dalert != "" ? true : false} onClose={() => setDalert("")}>
                 {dalert}
             </Dialog>
+
+            {dragActive && (
+                <div className='dropFile'>
+                    <span>Drop Here</span>
+                    <input
+                        className='dropuploadinput'
+                        aria-label='imgupload'
+                        type='file'
+                        accept='.jpg,.jpeg,.png,.gif'
+                        multiple
+                    >
+                    </input>
+                </div>
+            )}
+
             <Confirm
                 open={cdRev}
                 onClose={() => setCDRev(false)}
@@ -278,7 +322,11 @@ export default function Content() {
             </Confirm>
 
             {currentChat ? (
-                <div className='wrapper'>
+                <div className='wrapper'
+
+                // onDragEnd={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
+
+                >
                     <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile} />
                     <div className='top'>
                         <div className='activateFriendProfile' onClick={handleFriendProfile}>
@@ -317,7 +365,7 @@ export default function Content() {
                                 />
                             </div>
                         ) : (
-                            <div className='messages-wrapper' onScroll={(e)=>handleScrollCheck(e)}>
+                            <div className='messages-wrapper'>
                                 {messages.map((msg, index) => (
                                     <Message
                                         key={msg?.id}
@@ -359,6 +407,9 @@ export default function Content() {
                             </div>
                         </label>
                         <textarea
+                            autoFocus
+                            onPasteCapture={(e) => handleImages(e, 1)}
+                            
                             maxLength={160}
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
@@ -377,7 +428,7 @@ export default function Content() {
                                 <i className='fa-solid fa-paper-plane'></i>
                             }
                         </button>
-                        
+
                     </div>
                 </div>
             ) : (
