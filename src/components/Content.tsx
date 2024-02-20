@@ -417,7 +417,6 @@ export default function Content() {
                             </div>
                         </label>
                         <textarea
-                            autoFocus
                             onPasteCapture={(e) => handleImages(e, 1)}
                             
                             maxLength={160}

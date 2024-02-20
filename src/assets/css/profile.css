@@ -11,6 +11,9 @@
     opacity: 0;
     z-index: 100;
     border-right: var(--border);    
+    -moz-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
 }
 
 .profile-infos{
@@ -49,9 +52,6 @@
     padding: 1.5rem 1rem;
     gap: 1.5rem;
     height: calc(100vh - 70px);
-    -moz-user-select: all !important;
-    -webkit-user-select: all !important;
-    user-select: all !important;
 }
 
 .profile-infos .avatar-wrapper {
@@ -157,9 +157,6 @@
 
 .profile-infos .edit-btn {
     width: max-content;
-    -moz-user-select: none !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
 }
 
 .profile-infos .profile-form {
