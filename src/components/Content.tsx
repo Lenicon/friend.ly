@@ -94,7 +94,7 @@ export default function Content() {
 
     useEffect(()=>{
         setLimitSize(20);
-    }, [currentChat, localStorage, window])
+    }, [message])
 
     useEffect(() => {
         loadMessages();

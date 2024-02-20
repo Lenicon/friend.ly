@@ -143,7 +143,7 @@ export const createConversationAsync = async (userId, friendId) => {
 
         const conv = {
             members: [userId, friendId],
-            last: { message: "", createdAt: null },
+            last: { message: "", createdAt: serverTimestamp() },
             createdAt: serverTimestamp(),
             revealed: []
         };
