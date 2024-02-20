@@ -284,9 +284,7 @@ export default function Content() {
                     setDragActive(false);
                 }
             }}
-            // onDragEnd={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
-            // onDragExit={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
-
+            
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}

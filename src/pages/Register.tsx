@@ -258,7 +258,7 @@ export default function Register() {
               <label className='input-label'>
                 Interests
                 <span style={{ color: 'gray', fontWeight: 'normal', fontSize: '15px', marginLeft: '5px' }}>
-                  {`(tags left: ${10 - tags.length}; comma to add; backspace to remove)`}
+                  {`(tags left: ${10 - tags.length}; space to add; backspace to remove)`}
                 </span>
               </label>
               <TagsInput tags={tags} setTags={setTags} />

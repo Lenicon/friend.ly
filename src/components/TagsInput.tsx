@@ -3,7 +3,7 @@ import '../assets/css/tagsInput.css';
 export default function TagsInput({ tags, setTags }) {
 
     const handleKeyDown = (e) => {
-        if (e.key == "," || e.key == "Enter") {
+        if (e.key == " " || e.key == "Enter") {
             e.preventDefault();
 
             if (tags.length == 10) return;
