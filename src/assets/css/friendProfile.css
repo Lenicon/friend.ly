@@ -7,7 +7,7 @@
     background-color: var(--white);
     color: var(--black);
     right: 0;
-    z-index: 150;
+    z-index: 7000;
     transform: scaleX(0);
     transform-origin: 100%;
     opacity: 0;
@@ -35,6 +35,9 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
+    -moz-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
 }
 
 .friendProfile-topbar .heading {

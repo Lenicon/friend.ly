@@ -6,7 +6,7 @@ import ImageSlider from './ImageSlider';
 import InfoContainer from './InfoContainer';
 import { Context } from '../context/Context';
 import { v4 as getID } from 'uuid';
-import { createMessageAsync, getMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
+import { countMsgs, createMessageAsync,getMsgQueryByConversationId, getSnapshotData, updateRevealedAsync } from '../services/chatServices';
 import { onSnapshot } from 'firebase/firestore';
 import FriendProfile from './FriendProfile';
 import Compressor from 'compressorjs';
@@ -20,7 +20,9 @@ export default function Content() {
 
     const [onMenu, setOnMenu] = useState(false);
     const [onViewer, setOnViewer] = useState(false);
+
     const [messages, setMessages] = useState([]);
+    const [limitSize, setLimitSize] = useState(20);
 
     const [images, setImages] = useState([]);
     const [message, setMessage] = useState("");
@@ -82,46 +84,49 @@ export default function Content() {
         } else return setURevealed(false);
     }
 
+
+    // -- MESSAGE LOADING -- //
     useEffect(() => {
-        return scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        if (limitSize == 20){
+            return scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
     }, [messages]);
 
-    useEffect(() => {
+    useEffect(()=>{
+        setLimitSize(20);
+    }, [currentChat, localStorage, window])
 
+    useEffect(() => {
         loadMessages();
-    }, [currentChat]);
+    }, [currentChat, limitSize]);
 
     const loadMessages = () => {
         if (currentChat == null) return;
         try {
-            const query = getMsgQueryByConversationId(currentChat.id);
+            const query = getMsgQueryByConversationId(currentChat.id, limitSize);
             onSnapshot(query, snapshots => {
                 let tmpMessages = [];
                 snapshots.forEach(snapshot => {
                     tmpMessages.push(getSnapshotData(snapshot));
                 });
-                setMessages(tmpMessages.sort((a, b) => a.createdAt - b.createdAt));
+                setMessages(tmpMessages.sort((a,b)=>a.createdAt-b.createdAt));
             })
         } catch (error) {
             console.error(error)
         }
     };
 
-    // const handleScrollCheck = (e) => {
-    //     const top = Math.abs(e.target.scrollTop) < 0.5;
+    const handleScrollCheck = async(e) => {
+        const top = Math.abs(e.target.scrollTop) < 0.5;
+        const l = await countMsgs(currentChat.id)
+        if (top && messages.length != l) {
+            setLimitSize(prev=>prev+5);
+        };
+    }
 
-    //     if (top && messages.length>0) {
-    //         const query = getOldMsgQueryByConversationId(currentChat.id, messages.length-1);
-    //         onSnapshot(query, snapshots => {
-    //             let tmpmsg = [];
-    //             snapshots.forEach(snapshot => {
-    //                 if (messages.includes(getSnapshotData(snapshot))) return;
-    //                 else tmpmsg.push(getSnapshotData(snapshot));
-    //             });
-    //             setMessages((m)=>[...m, tmpmsg.sort((a,b)=>a.createdAt-b.createdAt)]);
-    //         })
-    //     };
-    // }
+    // -- MESSAGE LOADING end -- //
+
+    // -- MESSAGE HANDLING -- //
 
     const openImageViewer = (images) => {
         setMsgImages(images);
@@ -211,6 +216,7 @@ export default function Content() {
     }
 
     const handleCreateMessage = async () => {
+        setLimitSize(20);
         if (currentChat == null) return;
         if (!message && images?.length == 0) return;
         if (images) {
@@ -246,7 +252,10 @@ export default function Content() {
         }
     };
 
+    // -- MESSAGE HANDLING end -- //
+
     const handleCloseChat = () => {
+        setLimitSize(20);
         setOnFriendProfile(false);
         setOnViewer(false);
         dispatch({ type: "SET_CURRENT_CHAT", payload: null });
@@ -259,6 +268,7 @@ export default function Content() {
     }
 
     const handleRevealIdentity = async () => {
+        setLimitSize(20);
         if (currentChat?.last.createdAt == null || currentChat?.last.createdAt == undefined) {
             return setDalert("You can't reveal yourself yet, talk to them first.");
         }
@@ -274,6 +284,8 @@ export default function Content() {
 
     return (
         <div
+            
+
             onDropCapture={async(e) => {handleImages(e, 2); await setDragActive(false)}}
             onDragEnter={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(true); }}
             onDragLeave={(e) => {
@@ -284,7 +296,7 @@ export default function Content() {
                     setDragActive(false);
                 }
             }}
-            
+
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -320,11 +332,7 @@ export default function Content() {
             </Confirm>
 
             {currentChat ? (
-                <div className='wrapper'
-
-                // onDragEnd={(e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false); }}
-
-                >
+                <div className='wrapper'>
                     <FriendProfile open={onFriendProfile} setOpen={setOnFriendProfile} />
                     <div className='top'>
                         <div className='activateFriendProfile' onClick={handleFriendProfile}>
@@ -354,7 +362,9 @@ export default function Content() {
                             )}
                         </div>
                     </div>
-                    <div className='center' onClick={() => setOnFriendProfile(false)}>
+                    <div className='center'
+                    
+                    onClick={() => setOnFriendProfile(false)}>
                         {msgImages.length > 0 && onViewer ? (
                             <div className='image-viewer-wrapper'>
                                 <ImageSlider
@@ -363,9 +373,11 @@ export default function Content() {
                                 />
                             </div>
                         ) : (
-                            <div className='messages-wrapper'>
-                                {messages.map((msg, index) => (
+                            <div className='messages-wrapper' onScroll={(e)=>handleScrollCheck(e)}>
+                                
+                                {messages.filter((item, index)=>messages.indexOf(item) == index).map((msg, index) => (
                                     <Message
+                                        
                                         key={msg?.id}
                                         msg={msg}
                                         owner={msg?.sender == auth?.id}

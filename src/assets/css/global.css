@@ -4,7 +4,10 @@
     --subcolor: #86b46c;
     --subcolor-light:#a2cc8a;
     --green-transparent: rgba(6, 100, 23, 0.9);
+    --green-transparent2: rgba(6, 100, 23, 0.97);
     --subcolor-transparent: rgba(134, 180, 108, 0.9);
+    --subcolor-transparent2: rgba(134, 180, 108, 0.97);
+    
     --black: #333;
     --white: #fff;
     --bg-dark: rgba(0, 0, 0, 0.2);
