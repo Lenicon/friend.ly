@@ -150,7 +150,7 @@ export default function SideBar() {
                 let um = user.matches[user.matches.length-1];
                 let gc = await getConversationAsync(um);
                 if (gc){
-                    if (gc.last.createdAt == null || gc.last.createdAt == undefined){
+                    if (gc.last.message == "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST"){
                         await setDalert("Message your latest match first!");
                         return setNewChat(false);
                     }

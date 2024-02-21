@@ -143,7 +143,7 @@ export const createConversationAsync = async (userId, friendId) => {
 
         const conv = {
             members: [userId, friendId],
-            last: { message: "", createdAt: serverTimestamp() },
+            last: { message: `ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST`, createdAt: serverTimestamp() },
             createdAt: serverTimestamp(),
             revealed: []
         };
@@ -226,7 +226,7 @@ export const createMessageAsync = async (message, images, convoId) => {
             const convDoc = doc(db, "conversations", convoId);
             await updateDoc(convDoc, {
                 last: {
-                    message: msg.message,
+                    message: (msg.message == "" && msg.images.length > 0) ? `MSGPHOTOPROCESSSENDX12345X_${message?.sender}`:msg.message,
                     createdAt: msg.createdAt
                 },
             });

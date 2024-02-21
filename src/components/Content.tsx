@@ -274,7 +274,7 @@ export default function Content() {
 
     const handleRevealIdentity = async () => {
         setLimitSize(20);
-        if (currentChat?.last.createdAt == null || currentChat?.last.createdAt == undefined) {
+        if (currentChat?.last.message == "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST") {
             return setDalert("You can't reveal yourself yet, talk to them first.");
         }
         if (uRevealed == false) {
