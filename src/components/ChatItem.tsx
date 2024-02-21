@@ -18,14 +18,16 @@ export default function ChatItem({chat, active, selectConversation}) {
   }
 
   let lastMessage = "";
-  switch (chat?.last?.message) {
-    case "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST":
+  
+  switch (true) {
+    case (chat?.last?.message == "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST"):
       lastMessage = `Say hi! to ${chat?.friend?.username}`;
       break;
     
-    case (chat?.last?.message.includes("MSGPHOTOPROCESSSENDX12345X_")):
-        if (chat?.last?.message == `MSGPHOTOPROCESSSENDX12345X_${chat?.friend?.id}`) lastMessage = `${!revealed? chat?.friend?.username: chat?.friend?.fname} sent a photo.`;
-        else lastMessage = "You sent a photo.";
+    case (chat?.last?.message?.includes("MSGPHOTOPROCESSSENDX12345X_")):
+        
+        if (chat?.last?.message == `MSGPHOTOPROCESSSENDX12345X_${chat?.friend?.id}`) lastMessage = `${!revealed? chat?.friend?.username: chat?.friend?.fname} sent a photo/s.`;
+        else lastMessage = "You sent a photo/s.";
 
       break;
 
