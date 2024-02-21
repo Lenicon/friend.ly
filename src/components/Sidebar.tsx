@@ -159,7 +159,7 @@ export default function SideBar() {
             }
 
             let friendlist = [];
-            for(let fl = 0; fl < 5; fl++){
+            for(let fl = 0; fl < 10; fl++){
                 await friendlist.push(contacts[Math.floor(Math.random() * contacts.length)]);
             }
 
@@ -234,6 +234,7 @@ export default function SideBar() {
 
     const handleLogout =async () => {
         await localStorage.setItem("prevConv", null);
+        await localStorage.setItem("convId", null);
         await logoutAsync();
         dispatch(signOut());
     };

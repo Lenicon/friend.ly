@@ -120,8 +120,13 @@ export default function Content() {
         const top = Math.abs(e.target.scrollTop) < 0.5;
         const l = await countMsgs(currentChat.id)
         if (top && messages.length != l) {
-            setLimitSize(prev=>prev+5);
+            limiterrahh(5, 2);
         };
+    }
+
+    const limiterrahh = (num, seconds) => {
+        setLimitSize(prev=>prev+num);
+        setTimeout(()=>limiterrahh(num, seconds), seconds*1000);
     }
 
     // -- MESSAGE LOADING end -- //
