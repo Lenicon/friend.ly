@@ -6,7 +6,7 @@
     /* background-color: var(--green); */
     background: linear-gradient(var(--green), var(--subcolor));
     color: var(--white);
-    transition: all 0.5s;
+    transition: all 0.2s;
     transform: translateX(-100%);
     opacity: 0;
     z-index: 100;
