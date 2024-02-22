@@ -20,14 +20,14 @@ export default function ChatItem({chat, active, selectConversation}) {
   let lastMessage = "";
   
   switch (true) {
-    case (chat?.last?.message == "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST"):
+    case (chat?.last?.message == "XXCONVO_FIRSTMESSAGEXX"):
       lastMessage = `Say hi! to ${chat?.friend?.username}`;
       break;
     
-    case (chat?.last?.message?.includes("MSGPHOTOPROCESSSENDX12345X_")):
+    case (chat?.last?.message?.includes("XXMSGPHOTOPROCESSSENDXX")):
         
-        if (chat?.last?.message == `MSGPHOTOPROCESSSENDX12345X_${chat?.friend?.id}`) lastMessage = `${!revealed? chat?.friend?.username: chat?.friend?.fname} sent a photo/s.`;
-        else lastMessage = "You sent a photo/s.";
+        let r = chat?.last?.message?.split("__", 3);
+        lastMessage = `${ (r[1] == chat?.friend?.id) ? (!revealed? chat?.friend?.username: chat?.friend?.fname) : "You"} sent ${ (r[2]>1) ? `${r[2]} photos`:"a photo" }.`;
 
       break;
 
@@ -49,7 +49,7 @@ export default function ChatItem({chat, active, selectConversation}) {
                 <span className='username'>{!revealed? (chat?.friend?.username):(`${chat?.friend?.fname} ${chat?.friend?.lname}`)}</span>
                 {chat?.last?.createdAt && (
                   <span className='timeline'>
-                    {format(chat?.last?.createdAt?.toDate())}
+                    {(chat?.last?.message != "XXCONVO_FIRSTMESSAGEXX") ? format(chat?.last?.createdAt?.toDate()):""}
                   </span>
                 )}
             </div>
