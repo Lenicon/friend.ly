@@ -27,7 +27,7 @@ export default function ChatItem({chat, active, selectConversation}) {
     case (chat?.last?.message?.includes("XXMSGPHOTOPROCESSSENDXX")):
         
         let r = chat?.last?.message?.split("__", 3);
-        lastMessage = `${ (r[1] == chat?.friend?.id) ? (!revealed? chat?.friend?.username: chat?.friend?.fname) : "You"} sent ${ (r[2]>1) ? `${r[2]} photos`:"a photo" }.`;
+        lastMessage = `${ (r[2] == chat?.friend?.id) ? (!revealed? chat?.friend?.username: chat?.friend?.fname) : "You"} sent ${ (r[1]>1) ? `${r[1]} photos`:"a photo" }.`;
 
       break;
 
