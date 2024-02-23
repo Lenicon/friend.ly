@@ -150,7 +150,7 @@ export default function SideBar() {
                 let um = user.matches[user.matches.length-1];
                 let gc = await getConversationAsync(um);
                 if (gc){
-                    if (gc?.last?.message == "ADMIN_X10347C9SAK2NFIDBVWI_MSGTEST"){
+                    if (gc?.last?.message == "XXCONVO_FIRSTMESSAGEXX"){
                         await setDalert("Message your latest match first!");
                         return setNewChat(false);
                     }
@@ -159,8 +159,13 @@ export default function SideBar() {
             }
 
             let friendlist = [];
+            let filteredcontacts = contacts.filter((t)=>{
+                return conversations.some((v)=>{
+                    return v.id !== t.id;
+                })
+            })
             for(let fl = 0; fl < 10; fl++){
-                await friendlist.push(contacts[Math.floor(Math.random() * contacts.length)]);
+                await friendlist.push(filteredcontacts[Math.floor(Math.random() * filteredcontacts.length)]);
             }
 
             if (friendlist.length > 0){
