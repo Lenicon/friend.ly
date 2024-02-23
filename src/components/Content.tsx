@@ -66,6 +66,7 @@ export default function Content() {
     const [revealed, setRevealed] = useState(false);
     const [uRevealed, setURevealed] = useState(false);
 
+
     useEffect(() => {
         loadFriendRevealInfo();
         loadUserRevealInfo();
