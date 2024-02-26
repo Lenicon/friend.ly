@@ -161,8 +161,8 @@ export default function SideBar() {
             let friendlist = [];
             const filteredcontacts = contacts.filter((t)=>{
                 return conversations.every(fd=>fd.id != t.id)
-            })
-            console.log(filteredcontacts)
+            });
+
             for(let fl = 0; fl < 10; fl++){
                 
                 await friendlist.push(filteredcontacts[Math.floor(Math.random() * filteredcontacts.length)]);

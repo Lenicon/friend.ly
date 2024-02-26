@@ -20,6 +20,10 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+    overscroll-behavior: none;
+}
+
 .register .logo, .login .logo, .passres .logo {
     font-size: 30px;
     color: var(--white);
