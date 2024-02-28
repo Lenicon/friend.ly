@@ -169,7 +169,6 @@
 }
 
 .register .wrapper .form .btnProceed:hover, .register .wrapper .form .btnProceed:active {
-  /* opacity: 1; */
   background: linear-gradient(var(--green), var(--subcolor));
   -moz-background-clip: border-box;
   -webkit-background-clip: border-box;
