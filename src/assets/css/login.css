@@ -69,7 +69,7 @@
   transition: none !important;
 }
 
-.login .wrapper .form button:hover {
+.login .wrapper .form button:hover, .login .wrapper .form button:active {
   background: linear-gradient(var(--green), var(--subcolor));
   -moz-background-clip: border-box;
   -webkit-background-clip: border-box;
