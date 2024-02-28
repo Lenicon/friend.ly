@@ -66,12 +66,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* opacity: 0.8; */
   transition: none !important;
 }
 
 .login .wrapper .form button:hover {
-  /* opacity: 1; */
   background: linear-gradient(var(--green), var(--subcolor));
   -moz-background-clip: border-box;
   -webkit-background-clip: border-box;
